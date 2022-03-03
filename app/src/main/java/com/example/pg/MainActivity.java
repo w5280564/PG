@@ -1,14 +1,19 @@
 package com.example.pg;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.example.pg.baseview.BaseActivity;
 
-import android.os.Bundle;
+public class MainActivity extends BaseActivity {
 
-public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initView() {
+
+
+
     }
 }

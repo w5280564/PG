@@ -1,0 +1,59 @@
+<resources>
+
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
+
+
+    <style name="BaseAppTheme" parent="AppTheme.Base"></style>
+
+
+    <!-- 加载时小人动画的样式 -->
+    <style name="loadingStyle">
+
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@color/transparent</item>
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 这行代码不能少 -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 动画 -->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <!-- 模糊 设为true的话背景就是黑色透明的 -->
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <!--加载框-->
+    <declare-styleable name="ProgressWheel">
+        <attr name="matProg_progressIndeterminate" format="boolean" />
+        <attr name="matProg_barColor" format="color" />
+        <attr name="matProg_rimColor" format="color" />
+        <attr name="matProg_rimWidth" format="dimension" />
+        <attr name="matProg_spinSpeed" format="float" />
+        <attr name="matProg_barSpinCycleTime" format="integer" />
+        <attr name="matProg_circleRadius" format="dimension" />
+        <attr name="matProg_fillRadius" format="boolean" />
+        <attr name="matProg_barWidth" format="dimension" />
+        <attr name="matProg_linearProgress" format="boolean" />
+    </declare-styleable>
+
+    <!-- 标题横向分割线 -->
+    <style name="title_line_transverse">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/title_line</item>
+    </style>
+
+
+
+</resources>

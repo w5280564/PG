@@ -7,4 +7,17 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- 透明 -->
+    <color name="transparent">#00000000</color>
+    <color name="animal_color">#1F8FE5</color>
+
+    <!-- APP主色调  以前 ##00C9AA-->
+    <color name="app_main_color">#1F8FE5</color>
+
+    <!-- 正文颜色 -->
+    <color name="text_main_color">#444444</color>
+
+    <!-- 标题分割线的颜色 -->
+    <color name="title_line">#c9c9c9</color>
 </resources>
