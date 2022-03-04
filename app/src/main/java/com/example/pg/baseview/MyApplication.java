@@ -9,6 +9,8 @@ import androidx.multidex.BuildConfig;
 import androidx.multidex.MultiDexApplication;
 
 
+import com.tencent.mmkv.MMKV;
+
 import org.xutils.x;
 
 import java.util.LinkedList;
@@ -31,7 +33,8 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
         x.Ext.init(this);
-        x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
+//        x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
+        MMKV.initialize(this);
     }
 
 

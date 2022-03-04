@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.example.pg.activity.LoginActivity;
 import com.example.pg.bean.baseModel;
 import com.google.gson.Gson;
+import com.tencent.mmkv.MMKV;
 
 import org.json.JSONObject;
 import org.xutils.common.Callback;
@@ -21,12 +22,16 @@ import java.util.Map;
 public class xUtils3Http {
 
     //    public static final String BASE_URL = "http://pgdtt.aheadsoft.com.cn";
-    public static final String BASE_URL = "http://hb.pgdtt.com.cn";
+//    public static final String BASE_URL = "https://qa-dtt-mobile.pg.com.cn";
+    public static final String BASE_URL = "https://dtt-mobile.pg.com.cn";
     public static final String SSO_PingID = "https://dtt-mobile.pg.com.cn/app/#/"; //pingID
     public static final String SSO_Login = "/bff/api/v1/sso/v3Login"; //获取 pingID后sso登录
+    public static final String User_By = "/bff/user/get-by-code/"; //获取 用户信息
 
     public static final String SSO_URl = "https://api-b2b-qa.cn-pgcloud.com/paas-ssofed/v3/login?subscription-key=e65fca7dafb049f88591d94791ff35e7&app=dtt-mobile-portal&pfidpadapterid=ad..OAuth";
-//
+    public static String TOKEN = "token";
+    public static String Data = "data";//用户短名
+    public static String UserData = "user";//用户信息
 
     public static void get(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
         RequestParams params = new RequestParams(BASE_URL + url);
@@ -36,10 +41,6 @@ public class xUtils3Http {
                 Log.d("PG", key + " = " + parms.get(key));
             }
         }
-//        MyInfo myInfo = new MyInfo(mContext);
-//        if (!TextUtils.isEmpty(myInfo.getUserInfo().getToken())) {
-//            params.setHeader("Authorization", myInfo.getUserInfo().getToken());
-//        }
         params.setAsJsonContent(true);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
@@ -51,7 +52,7 @@ public class xUtils3Http {
                     String msg = baseModel.getMsg();
                     String code = baseModel.getCode();
                     String state = baseModel.getState();
-                    if (TextUtils.equals(code,"0")){
+                    if (TextUtils.equals(code,"0") || TextUtils.equals(state,"0") || TextUtils.equals(message,"true")|| TextUtils.equals(msg,"true")){
                         if (callback != null) {
                             callback.success(result);
                         }
@@ -60,16 +61,6 @@ public class xUtils3Http {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
                     }
-//                        Intent intent = new Intent(mContext, MainLogin_Register.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        mContext.startActivity(intent);
-//                    } else if (model.getCode() == 0) {
-//                        if (callback != null) {
-//                            callback.success(result);
-//                        }
-//                    } else {
-//                        Toast.makeText(mContext, model.getMsg(), Toast.LENGTH_SHORT).show();
-//                    }
                 }
             }
 
@@ -84,9 +75,6 @@ public class xUtils3Http {
                 if (callback != null) {
                     callback.failed();
                 }
-
-
-
 
             }
 
@@ -107,8 +95,11 @@ public class xUtils3Http {
                 params.addBodyParameter(key, parms.get(key).toString());
             }
         }
-        params.setMultipart(true);
-//        params.setAsJsonContent(true);
+        MMKV mmkv = MMKV.defaultMMKV();
+        if (!TextUtils.isEmpty(mmkv.decodeString(TOKEN))) {
+            params.setHeader("Authorization", mmkv.decodeString(TOKEN));
+        }
+        params.setAsJsonContent(true);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

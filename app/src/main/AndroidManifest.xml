@@ -7,6 +7,18 @@
 
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 相机权限 -->
+
+    <uses-permission
+        android:name="android.permission.MODIFY_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.GET_TOP_ACTIVITY_INFO"
+        tools:ignore="ProtectedPermissions" /> <!-- 在sdcard中创建/删除文件的权限 -->
+
     <application
         android:name=".baseview.MyApplication"
         android:allowBackup="true"
@@ -18,11 +30,18 @@
         android:supportsRtl="true"
         android:theme="@style/BaseAppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:theme,allowBackup"
-        >
+        tools:replace="android:theme,allowBackup">
+
+
+
+        <activity
+            android:name=".activity.Discover_QRCode"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
+
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true">

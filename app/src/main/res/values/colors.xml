@@ -20,4 +20,7 @@
 
     <!-- 标题分割线的颜色 -->
     <color name="title_line">#c9c9c9</color>
+    <color name="color_f6f9f9">#f6f9f9</color>
+
+    <color name="colorPrimaryDark">#ff08a7ee</color>
 </resources>
