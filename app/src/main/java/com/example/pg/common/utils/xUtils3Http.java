@@ -105,7 +105,7 @@ public class xUtils3Http {
             params.addHeader("Auth-Type", "ssofed");
         }
         params.setBodyContentType("application/json;charset=UTF-8");
-        params.setMultipart(true);
+        params.setAsJsonContent(true);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
