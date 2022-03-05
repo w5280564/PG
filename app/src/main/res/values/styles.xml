@@ -59,6 +59,8 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-
+    <style name="TabLayoutTextStyle" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">14sp</item>
+    </style>
 
 </resources>

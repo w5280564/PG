@@ -21,12 +21,13 @@ import java.util.Map;
 
 public class xUtils3Http {
 
-    //    public static final String BASE_URL = "http://pgdtt.aheadsoft.com.cn";
-//    public static final String BASE_URL = "https://qa-dtt-mobile.pg.com.cn";
-    public static final String BASE_URL = "https://dtt-mobile.pg.com.cn";
+    //    public static final String BASE_URL = "https://qa-dtt-mobile.pg.com.cn";
+    public static final String BASE_URL = "https://api-b2b-prd.cn-pgcloud.com/dtt-application/dtt/zzsy";//地址
+    public static final String SSO_BASE_URL = "https://dtt-mobile.pg.com.cn";
     public static final String SSO_PingID = "https://dtt-mobile.pg.com.cn/app/#/"; //pingID
     public static final String SSO_Login = "/bff/api/v1/sso/v3Login"; //获取 pingID后sso登录
     public static final String User_By = "/bff/user/get-by-code/"; //获取 用户信息
+    public static final String Product = "/product"; //生产信息
 
     public static final String SSO_URl = "https://api-b2b-qa.cn-pgcloud.com/paas-ssofed/v3/login?subscription-key=e65fca7dafb049f88591d94791ff35e7&app=dtt-mobile-portal&pfidpadapterid=ad..OAuth";
     public static String TOKEN = "token";
@@ -34,7 +35,7 @@ public class xUtils3Http {
     public static String UserData = "user";//用户信息
 
     public static void get(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
-        RequestParams params = new RequestParams(BASE_URL + url);
+        RequestParams params = new RequestParams(url);
         if (parms != null) {
             for (String key : parms.keySet()) {
                 params.addParameter(key, parms.get(key));
@@ -52,11 +53,11 @@ public class xUtils3Http {
                     String msg = baseModel.getMsg();
                     String code = baseModel.getCode();
                     String state = baseModel.getState();
-                    if (TextUtils.equals(code,"0") || TextUtils.equals(state,"0") || TextUtils.equals(message,"true")|| TextUtils.equals(msg,"true")){
+                    if (TextUtils.equals(code, "0") || TextUtils.equals(state, "0") || TextUtils.equals(message, "true") || TextUtils.equals(msg, "true")) {
                         if (callback != null) {
                             callback.success(result);
                         }
-                    }else {
+                    } else {
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
@@ -89,17 +90,22 @@ public class xUtils3Http {
     }
 
     public static void post(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
-        RequestParams params = new RequestParams(BASE_URL + url);
+        RequestParams params = new RequestParams(url);
         if (parms != null) {
             for (String key : parms.keySet()) {
-                params.addBodyParameter(key, parms.get(key).toString());
+                params.addBodyParameter(key, parms.get(key));
             }
         }
         MMKV mmkv = MMKV.defaultMMKV();
         if (!TextUtils.isEmpty(mmkv.decodeString(TOKEN))) {
-            params.setHeader("Authorization", mmkv.decodeString(TOKEN));
+//            params.addHeader("Content-Type", "application/json;charset=UTF-8");
+//            String s = "eyJhbGciOiJSUzUxMiIsImtpZCI6IjEifQ.eyJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiR0RQUiJdLCJjbGllbnRfaWQiOiJCMkIgUFJEIFNTTyIsIlVpZCI6IkRaODY3MiIsIlNob3J0TmFtZSI6ImxpdS5sLjQ5IiwiTGFzdE5hbWUiOiJsaXUiLCJVc2VybmFtZSI6InVpZD1EWjg2NzIsb3U9cGVvcGxlLG91PXBnLG89d29ybGQiLCJGaXJzdE5hbWUiOiJsaW5hIiwiZXhwIjoxNjQ2NDU5MDY5fQ.ZANwjmNLkugd8S3nc_1uK0QNnlvWqDQi0yvLuXUZw3wCJHzSFlWjCHZ-OKm-EvuxpCRSsSG2-ZY7t8OG20WE_RTd5ZcMY4lklQZ0E4lyxVshF_c56Z82R6Wq0AvMuQ1BG2I-xVfyAzSuuu3aeFP__V5uXEqO7JmVmMgYbfaHCVx2yvIwQUj6nt7qcSMIely6KAuW1azrZSnop92eK-tAWgeROUUQNqVA1yjSUcsK8VSksUKavUo0mFvpre2K6KbV0aH0FytrH4o797BePH2h6RVYcD2CezuekVpsodjDve6P7HQsXmN1FpKCI3lwqyBnQrWcvHaF8OljqHzEFIr3KA";
+            params.addHeader("Authorization", mmkv.decodeString(TOKEN));
+            params.addHeader("Ocp-Apim-Subscription-Key", "0143fb1763a0478cba1379682a52e077");
+            params.addHeader("Auth-Type", "ssofed");
         }
-        params.setAsJsonContent(true);
+        params.setBodyContentType("application/json;charset=UTF-8");
+        params.setMultipart(true);
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

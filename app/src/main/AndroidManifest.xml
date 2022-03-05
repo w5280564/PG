@@ -35,6 +35,9 @@
 
 
         <activity
+            android:name=".activity.QRDetail_Activity"
+            android:exported="false" />
+        <activity
             android:name=".activity.Discover_QRCode"
             android:exported="false" />
 
@@ -42,6 +45,7 @@
             android:name=".MainActivity"
             android:exported="true" />
 
+<!--        LoginActivity-->
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true">

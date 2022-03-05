@@ -49,7 +49,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void getServerData() {
-        getV3Login(this, xUtils3Http.User_By);
+        String s = xUtils3Http.SSO_BASE_URL + xUtils3Http.User_By;
+        getV3Login(this,s);
     }
 
     @Override

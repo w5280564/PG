@@ -101,7 +101,8 @@ public class LoginActivity extends BaseActivity {
                 String substring = url.substring(startIndex, lastIndex);
                 L.d("PG", url);
                 authCode = substring;
-                getV3Login(LoginActivity.this, xUtils3Http.SSO_Login);
+                String s = xUtils3Http.SSO_BASE_URL + xUtils3Http.SSO_Login;
+                getV3Login(LoginActivity.this, s);
                 is = true;
             } else {
                 view.loadUrl(url);
