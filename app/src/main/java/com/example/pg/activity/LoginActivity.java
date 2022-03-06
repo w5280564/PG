@@ -7,17 +7,12 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.pg.MainActivity;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.bean.Login_Bean;
-import com.example.pg.bean.User_Bean;
-import com.example.pg.bean.baseModel;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.L;
-import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
-import com.google.gson.Gson;
 import com.tencent.mmkv.MMKV;
 
 import java.util.HashMap;
@@ -129,7 +124,7 @@ public class LoginActivity extends BaseActivity {
                 Login_Bean login_bean = GsonUtil.getInstance().json2Bean(result, Login_Bean.class);
                 if (login_bean != null) {
                     MMKV mmkv = MMKV.defaultMMKV();
-                    mmkv.encode(xUtils3Http.TOKEN, "Bearer" + login_bean.getToken());
+                    mmkv.encode(xUtils3Http.TOKEN, "Bearer " + login_bean.getToken());
                     mmkv.encode(xUtils3Http.Data, login_bean.getData());
                     skipAnotherActivity(MainActivity.class);
                 }

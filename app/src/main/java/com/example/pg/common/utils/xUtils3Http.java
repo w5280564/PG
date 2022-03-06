@@ -28,6 +28,15 @@ public class xUtils3Http {
     public static final String SSO_Login = "/bff/api/v1/sso/v3Login"; //获取 pingID后sso登录
     public static final String User_By = "/bff/user/get-by-code/"; //获取 用户信息
     public static final String Product = "/product"; //生产信息
+    public static final String Transport = "/transport"; //运输信息
+    public static final String Receipt = "/receipt"; //收货
+    public static final String ACF = "/acf"; //acf码图
+    public static final String Customer = "/customer"; //预警客户编码
+    public static final String CustomerAlarm = "/customerAlarm"; //业务编码
+    public static final String Tickets = "/tickets"; //告警信息
+    public static final String Dcreport = "/dcreport"; //dc履行率
+    public static final String Dcreport_Detail = "/dcreportDetail"; //dc履行率详情
+    public static final String Customer_Scan = "/customer-scan-report"; //客户
 
     public static final String SSO_URl = "https://api-b2b-qa.cn-pgcloud.com/paas-ssofed/v3/login?subscription-key=e65fca7dafb049f88591d94791ff35e7&app=dtt-mobile-portal&pfidpadapterid=ad..OAuth";
     public static String TOKEN = "token";
@@ -111,19 +120,21 @@ public class xUtils3Http {
             public void onSuccess(String result) {
                 if (result != null) {
                     Log.d("PG", url + "接口返回" + result);
-//                    baseModel model = new Gson().fromJson(result, baseModel.class);
-//                    if (model.getCode() == 201) {
-//                        Intent intent = new Intent(mContext, MainLogin_Register.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        mContext.startActivity(intent);
-//                    } else if (model.getCode() == 200) {
-//                        if (callback != null) {
-//                            callback.success(result);
-//                        }
-//                    } else {
-//                        callback.failed();
-//                        Toast.makeText(mContext, model.getMsg(), Toast.LENGTH_SHORT).show();
-//                    }
+                    baseModel baseModel = GsonUtil.getInstance().json2Bean(result, baseModel.class);
+                    String message = baseModel.getMessage();
+                    String msg = baseModel.getMsg();
+                    String code = baseModel.getCode();
+                    String state = baseModel.getState();
+                    if (TextUtils.equals(code, "0") || TextUtils.equals(state, "1") || TextUtils.equals(message, "true") || TextUtils.equals(msg, "success")) {
+                        if (callback != null) {
+                            callback.success(result);
+                        }
+                    } else {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    }
+
                 }
             }
 
@@ -134,15 +145,21 @@ public class xUtils3Http {
                     int responseCode = httpEx.getCode();
                     String responseMsg = httpEx.getMessage();
                     String errorResult = httpEx.getResult();
-                    // ...
+                    if (responseCode == 401){
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    }
+                }else {
+
+                    String errorMes = "Failed to connect to /139.9.121.19:8088";
+                    if (TextUtils.equals(errorMes, ex.getMessage())) {
+                        Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();
+                    }
                 }
-                String errorMes = "Failed to connect to /139.9.121.19:8088";
-                if (TextUtils.equals(errorMes, ex.getMessage())) {
-                    Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();
-                }
-                if (callback != null) {
-                    callback.failed();
-                }
+                    if (callback != null) {
+                        callback.failed();
+                    }
 
             }
 

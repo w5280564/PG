@@ -15,7 +15,34 @@
         <entry key="..\:/waylendemo/PG/app/src/main/res/layout/production_fragment.xml" value="0.35052083333333334" />
         <entry key="..\:/waylendemo/PG/app/src/main/res/layout/qrdetail_activity.xml" value="0.35052083333333334" />
         <entry key="..\:/waylendemo/PG/app/src/main/res/layout/webview_layout.xml" value="0.28125" />
+        <entry key="..\:/workspace/PG/app/src/main/res/drawable/base_gradual.xml" value="0.2475" />
+        <entry key="..\:/workspace/PG/app/src/main/res/drawable/btn_bg.xml" value="0.2475" />
+        <entry key="..\:/workspace/PG/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2475" />
+        <entry key="..\:/workspace/PG/app/src/main/res/drawable/progress_bar_color.xml" value="0.2475" />
+        <entry key="..\:/workspace/PG/app/src/main/res/drawable/shape_loading_dialog_bag.xml" value="0.2475" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/acf_fragment.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/activity_discover_qrcode.xml" value="0.3880208333333333" />
         <entry key="..\:/workspace/PG/app/src/main/res/layout/activity_main.xml" value="0.10104166666666667" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/custom_titlebar_layout.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/customer_detail.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/dcreport_activity.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/earlywarning_activity.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/earlywarning_detail.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/earlywarning_item.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/empty_view_layout.xml" value="0.4036458333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/layout_tab.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/my_arrowitemview.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/myacf_item.xml" value="0.3125" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/myacftime_item.xml" value="0.33697916666666666" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/production_fragment.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/qrdetail_activity.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/receipt_fragment.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/statistical_detail.xml" value="0.4036458333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/statistical_detail_one.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/statistical_item.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/statistical_item_one.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/transport_fragment.xml" value="0.3880208333333333" />
+        <entry key="..\:/workspace/PG/app/src/main/res/layout/view_load_more.xml" value="0.4036458333333333" />
       </map>
     </option>
   </component>

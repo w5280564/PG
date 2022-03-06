@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <com.example.pg.baseview.MyArrowItemView
+        android:id="@+id/vehicleNo_MyView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:arrowItemAvatarHeight="12dp"
+        app:arrowItemContent=""
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="车牌号"
+        app:arrowItemTitleColor="@color/text_color_444444"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.pg.baseview.MyArrowItemView
+        android:id="@+id/shiptoCode_MyView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:arrowItemAvatarHeight="12dp"
+        app:arrowItemContent=""
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="收货方编码"
+        app:arrowItemTitleColor="@color/text_color_444444"
+        app:layout_constraintTop_toBottomOf="@id/vehicleNo_MyView" />
+
+    <com.example.pg.baseview.MyArrowItemView
+        android:id="@+id/shiptoName_MyView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:arrowItemAvatarHeight="12dp"
+        app:arrowItemContent=""
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="收货方名称"
+        app:arrowItemTitleColor="@color/text_color_444444"
+        app:layout_constraintTop_toBottomOf="@id/shiptoCode_MyView" />
+
+
+
+    <com.example.pg.baseview.MyArrowItemView
+        android:id="@+id/state_MyView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:arrowItemAvatarHeight="12dp"
+        app:arrowItemContent=""
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="收货状态"
+        app:arrowItemTitleColor="@color/text_color_444444"
+        app:layout_constraintTop_toBottomOf="@id/shiptoName_MyView" />
+
+
+
+    <com.example.pg.baseview.MyArrowItemView
+        android:id="@+id/sendTime_MyView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:arrowItemAvatarHeight="12dp"
+        app:arrowItemContent=""
+        app:arrowItemShowArrow="false"
+        app:arrowItemShowAvatar="false"
+        app:arrowItemTitle="发货方时间"
+        app:arrowItemTitleColor="@color/text_color_444444"
+        app:layout_constraintTop_toBottomOf="@id/state_MyView" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

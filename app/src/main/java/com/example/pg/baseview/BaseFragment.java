@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.pg.R;
 import com.example.pg.common.utils.StringUtil;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public abstract class BaseFragment extends SimpleImmersionFragment{
+public abstract class BaseFragment extends SimpleImmersionFragment {
     protected MyApplication mApplication;
     protected Context mContext;
     protected BaseActivity mActivity;

@@ -29,4 +29,8 @@
 
     <!-- 白底上统一横向分割线的颜色 -->
     <color name="app_line">#E6E6E6</color>
+
+    <!--其他颜色 -->
+    <color name="text_other_color">#666666</color>
+    <color name="text_color_EFEFEF">#EFEFEF</color>
 </resources>

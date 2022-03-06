@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingConstraints">
+
+    <com.example.pg.common.titlebar.CustomTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleBarBackgroundColor="@color/app_main_color"
+        app:titleBarLeftImg="@mipmap/icon_back"
+        app:titleBarRightShowType="IMG"
+        app:titleBarShowBottomLine="false"
+        app:titleBarTitle="DC扫码率"
+        app:titleColor="@color/white"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        tools:ignore="MissingConstraints">
+
+
+        <TextView
+            android:id="@+id/name_Tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="区域"
+            android:textColor="@color/text_color_a1a1a1"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/code_Tv"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/code_Tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/text_color_a1a1a1"
+            android:textSize="12sp"
+            android:text="业务编码"
+            app:layout_constraintBottom_toBottomOf="@+id/name_Tv"
+            app:layout_constraintEnd_toStartOf="@id/ying_Tv"
+            app:layout_constraintStart_toEndOf="@id/name_Tv"
+            app:layout_constraintTop_toTopOf="@+id/name_Tv" />
+
+        <TextView
+            android:id="@+id/ying_Tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="应扫"
+            android:maxLines="1"
+            android:textColor="@color/text_color_a1a1a1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/name_Tv"
+            app:layout_constraintEnd_toStartOf="@id/shi_Tv"
+            app:layout_constraintStart_toEndOf="@id/code_Tv"
+            app:layout_constraintTop_toTopOf="@+id/name_Tv" />
+
+        <TextView
+            android:id="@+id/shi_Tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="实扫"
+            android:textColor="@color/text_color_a1a1a1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/name_Tv"
+            app:layout_constraintEnd_toStartOf="@id/lv_Tv"
+            app:layout_constraintStart_toEndOf="@id/ying_Tv"
+            app:layout_constraintTop_toTopOf="@+id/name_Tv" />
+
+        <TextView
+            android:id="@+id/lv_Tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="扫码率"
+            android:textColor="@color/text_color_a1a1a1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/name_Tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/shi_Tv"
+            app:layout_constraintTop_toTopOf="@+id/name_Tv" />
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/text_color_EFEFEF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_goneMarginStart="10dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

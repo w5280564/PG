@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -16,19 +15,12 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.pg.MainActivity;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
-import com.example.pg.bean.Login_Bean;
-import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.L;
-import com.example.pg.common.utils.xUtils3Http;
-import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;

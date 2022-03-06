@@ -21,16 +21,14 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 
-import com.example.pg.MainActivity;
+import com.example.pg.activity.MainActivity;
 import com.example.pg.R;
 import com.example.pg.common.titlebar.CustomTitleBar;
 import com.example.pg.common.utils.StringUtil;
 import com.example.pg.common.utils.T;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 
@@ -51,7 +49,7 @@ public abstract class BaseActivity extends FragmentActivity implements CustomTit
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 禁止横屏
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 禁止横屏
         setContentView(getLayoutId());
 //        ButterKnife.bind(this);
         mApplication =  MyApplication.getInstance();
@@ -261,25 +259,25 @@ public abstract class BaseActivity extends FragmentActivity implements CustomTit
 
 
 
-//    protected View addEmptyView(String text, int imgResource) {
-//        View emptyView = LayoutInflater.from(mActivity).inflate(R.layout.empty_view_layout, null);
-//        emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT));
-//        ImageView iv_noData = emptyView.findViewById(R.id.iv_noData);
-//
-//        if (!StringUtil.isBlank(text)) {
-//            TextView tv_noData = emptyView.findViewById(R.id.tv_noData);
-//            tv_noData.setText(text);
-//        }
-//
-//        if (imgResource != 0) {
-//            iv_noData.setImageResource(imgResource);
-//        } else {
-//            iv_noData.setImageResource(R.mipmap.icon_no_date);
-//        }
+    protected View addEmptyView(String text, int imgResource) {
+        View emptyView = LayoutInflater.from(mActivity).inflate(R.layout.empty_view_layout, null);
+        emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        ImageView iv_noData = emptyView.findViewById(R.id.iv_noData);
 
-//        return emptyView;
-//    }
+        if (!StringUtil.isBlank(text)) {
+            TextView tv_noData = emptyView.findViewById(R.id.tv_noData);
+            tv_noData.setText(text);
+        }
+
+        if (imgResource != 0) {
+            iv_noData.setImageResource(imgResource);
+        } else {
+//            iv_noData.setImageResource(R.mipmap.icon_no_date);
+        }
+
+        return emptyView;
+    }
 
 
 

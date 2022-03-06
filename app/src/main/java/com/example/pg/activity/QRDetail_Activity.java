@@ -8,12 +8,17 @@ import android.content.Intent;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseTabLayoutActivity;
 import com.example.pg.bean.AppMenuBean;
+import com.example.pg.fragment.QRDetail_ACF_Fragment;
 import com.example.pg.fragment.QRDetail_Production_Fragment;
+import com.example.pg.fragment.QRDetail_Receipt_Fragment;
+import com.example.pg.fragment.QRDetail_Transport_Fragment;
 import com.gyf.barlibrary.ImmersionBar;
+
+import java.util.ArrayList;
 
 
 /**
- * 侧边栏 内部人列表
+ * 扫描二维码
  */
 public class QRDetail_Activity extends BaseTabLayoutActivity {
     private String sn;
@@ -64,18 +69,20 @@ public class QRDetail_Activity extends BaseTabLayoutActivity {
 
     @SuppressLint("WrongConstant")
     private void initMenuData() {
-        for (int i = 0; i < 2; i++) {
+        ArrayList<String> tabName = new ArrayList<>();
+        tabName.add("生产");
+        tabName.add("运输");
+        tabName.add("收货");
+        tabName.add("ACFeature");
+        for (int i = 0; i < tabName.size(); i++) {
             AppMenuBean bean = new AppMenuBean();
-            if (i == 0) {
-                fragments.add(QRDetail_Production_Fragment.newInstance(sn));
-                bean.setName("生产");
-            } else {
-                fragments.add(QRDetail_Production_Fragment.newInstance(sn));
-                bean.setName("运输");
-            }
+            bean.setName(tabName.get(i));
             menuList.add(bean);
         }
-
+        fragments.add(QRDetail_Production_Fragment.newInstance(sn));
+        fragments.add(QRDetail_Transport_Fragment.newInstance(sn));
+        fragments.add(QRDetail_Receipt_Fragment.newInstance(sn));
+        fragments.add(QRDetail_ACF_Fragment.newInstance(sn));
         initViewPager(0);
     }
 

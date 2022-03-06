@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @NoArgsConstructor
 @Data
 public class Production_Bean {
 
+
     @SerializedName("data")
     private DataDTO data;
     @SerializedName("state")
-    private Integer state;
+    private String state;
     @SerializedName("msg")
     private String msg;
 
@@ -23,10 +23,6 @@ public class Production_Bean {
         private String productNo;
         @SerializedName("productName")
         private String productName;
-        @SerializedName("PlantCode")
-        private String plantCode;
-        @SerializedName("PlantName")
-        private String plantName;
         @SerializedName("lineCode")
         private String lineCode;
         @SerializedName("aggregationLevel")
@@ -41,5 +37,9 @@ public class Production_Bean {
         private String acFeature;
         @SerializedName("parentSn")
         private String parentSn;
+        @SerializedName("plantCode")
+        private String plantCode;
+        @SerializedName("plantName")
+        private String plantName;
     }
 }

@@ -45,7 +45,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:textStyle="bold"
-                android:textColor="@color/text_main_color"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </RelativeLayout>
         <!-- 中间文字结束 -->

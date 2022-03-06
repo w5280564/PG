@@ -1,4 +1,4 @@
-package com.example.pg;
+package com.example.pg.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,13 +12,10 @@ import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.pg.activity.Discover_QRCode;
-import com.example.pg.activity.LoginActivity;
+import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
-import com.example.pg.bean.Login_Bean;
 import com.example.pg.bean.User_Bean;
 import com.example.pg.common.utils.GsonUtil;
-import com.example.pg.common.utils.L;
 import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
 import com.tencent.mmkv.MMKV;
@@ -56,6 +53,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initEvent() {
         QR_Tv.setOnClickListener(this);
+        earlyWarning_Tv.setOnClickListener(this);
+        Statistics_Tv.setOnClickListener(this);
     }
 
     /**
@@ -119,6 +118,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.QR_Tv:
                 startCamera(mActivity);
                 break;
+                case R.id.earlyWarning_Tv:
+                    skipAnotherActivity(EarlyWarning_Activity.class);
+                break;
+                case R.id.Statistics_Tv:
+                    skipAnotherActivity(DcReport_Activity.class);
+                break;
+
         }
     }
 

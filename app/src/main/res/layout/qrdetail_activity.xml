@@ -16,11 +16,11 @@
         app:titleBarLeftImg="@mipmap/icon_back"
         app:titleBarRightShowType="IMG"
         app:titleBarShowBottomLine="false"
-        app:titleBarTitle="扫码追踪明细" />
+        app:titleBarTitle="扫码追踪明细"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/card_Tab"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_bar"
