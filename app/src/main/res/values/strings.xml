@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">PG</string>
+    <string name="app_name">追踪溯源</string>
 
-    <string name="Common_loading">努力加载中...</string>
+    <string name="Common_loading">查询中，请稍候...</string>
     <string name="Home_press_again">再滑一次退出程序</string>
 
 </resources>

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-public class BaseSplitIndexBean<T>{
+public class BaseSplitIndexBean<T> {
 //    @SerializedName("data")
 //    private DataDTO data;
 //    @SerializedName("state")
@@ -40,6 +40,7 @@ public class BaseSplitIndexBean<T>{
 
     private String totalPages;
     private List<T> content;
+    private Integer totalElements;
 
     public List<T> getContent() {
         return content;
@@ -54,9 +55,9 @@ public class BaseSplitIndexBean<T>{
         return totalPages;
     }
 
-
-
-
+    public Integer getTotalElements() {
+        return totalElements;
+    }
 
 
 }

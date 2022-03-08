@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * 扫码-运输
+ * 扫码-
  */
 public class QRDetail_Transport_Fragment extends BaseLazyFragment {
     private String sn;
@@ -91,10 +91,27 @@ public class QRDetail_Transport_Fragment extends BaseLazyFragment {
                     originalValue(transport_bean.getData().getShiptoCode(), "暂未填写", "", shiptoCode_MyView.getTvContent());
                     originalValue(transport_bean.getData().getShiptoName(), "暂未填写", "", shiptoName_MyView.getTvContent());
                     originalValue(transport_bean.getData().getDeliveryCode(), "暂未填写", "", deliveryCode_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getShipmentOrderStatus(), "暂未填写", "", state_MyView.getTvContent());
                     originalValue(transport_bean.getData().getSendCode(), "暂未填写", "", sendCode_MyView.getTvContent());
                     originalValue(transport_bean.getData().getSendName(), "暂未填写", "", sendName_MyView.getTvContent());
                     originalValue(transport_bean.getData().getSendTime(), "暂未填写", "", sendTime_MyView.getTvContent());
+//                    originalValue(transport_bean.getData().getShipmentOrderStatus(), "暂未填写", "", state_MyView.getTvContent());
+
+                    Object shipmentOrderStatus = transport_bean.getData().getShipmentOrderStatus();
+                    //1:received 2:receiving 3:reject 4:no QR
+                    String status = "";
+                    if (TextUtils.equals((CharSequence) shipmentOrderStatus,null)){
+                        status = "暂未填写";
+                    }else if (TextUtils.equals((CharSequence)shipmentOrderStatus,"1")){
+                        status = "received";
+                    }else if (TextUtils.equals((CharSequence)shipmentOrderStatus,"2")){
+                        status = "receiving";
+                    }else if (TextUtils.equals((CharSequence)shipmentOrderStatus,"3")){
+                        status = "reject";
+                    }else if (TextUtils.equals((CharSequence)shipmentOrderStatus,"4")){
+                        status = "no QR";
+                    }
+                        state_MyView.getTvContent().setText(status);
+
                 }
             }
 

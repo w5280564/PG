@@ -1,13 +1,17 @@
 package com.example.pg.common.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.example.pg.activity.LoginActivity;
 import com.example.pg.bean.baseModel;
+import com.example.pg.common.dialog.LoadingDialog;
 import com.google.gson.Gson;
 import com.tencent.mmkv.MMKV;
 
@@ -20,10 +24,17 @@ import org.xutils.x;
 import java.util.Map;
 
 public class xUtils3Http {
-
+    private static LoadingDialog mDialog;
+    private static String dialogMessage="";
     //    public static final String BASE_URL = "https://qa-dtt-mobile.pg.com.cn";
-    public static final String BASE_URL = "https://api-b2b-prd.cn-pgcloud.com/dtt-application/dtt/zzsy";//地址
     public static final String SSO_BASE_URL = "https://dtt-mobile.pg.com.cn";
+    public static String TOKEN = "token";
+    public static String Data = "data";//用户短名
+    public static String UserData = "user";//用户信息
+
+    public static final String QA_Marken_URL = "https://qa-dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯QA地址
+    public static final String PRD_Marken_URL = "https://dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯PRO地址
+    public static final String BASE_URL = "https://api-b2b-prd.cn-pgcloud.com/dtt-application/dtt/zzsy";//地址
     public static final String SSO_PingID = "https://dtt-mobile.pg.com.cn/app/#/"; //pingID
     public static final String SSO_Login = "/bff/api/v1/sso/v3Login"; //获取 pingID后sso登录
     public static final String User_By = "/bff/user/get-by-code/"; //获取 用户信息
@@ -38,10 +49,6 @@ public class xUtils3Http {
     public static final String Dcreport_Detail = "/dcreportDetail"; //dc履行率详情
     public static final String Customer_Scan = "/customer-scan-report"; //客户
 
-    public static final String SSO_URl = "https://api-b2b-qa.cn-pgcloud.com/paas-ssofed/v3/login?subscription-key=e65fca7dafb049f88591d94791ff35e7&app=dtt-mobile-portal&pfidpadapterid=ad..OAuth";
-    public static String TOKEN = "token";
-    public static String Data = "data";//用户短名
-    public static String UserData = "user";//用户信息
 
     public static void get(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
         RequestParams params = new RequestParams(url);
@@ -62,7 +69,7 @@ public class xUtils3Http {
                     String msg = baseModel.getMsg();
                     String code = baseModel.getCode();
                     String state = baseModel.getState();
-                    if (TextUtils.equals(code, "0") || TextUtils.equals(state, "0") || TextUtils.equals(message, "true") || TextUtils.equals(msg, "true")) {
+                    if (TextUtils.equals(code, "0") || TextUtils.equals(state, "1") || TextUtils.equals(message, "true") || TextUtils.equals(msg, "true")) {
                         if (callback != null) {
                             callback.success(result);
                         }
@@ -99,6 +106,7 @@ public class xUtils3Http {
     }
 
     public static void post(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
+        showDialog(mContext);
         RequestParams params = new RequestParams(url);
         if (parms != null) {
             for (String key : parms.keySet()) {
@@ -118,6 +126,7 @@ public class xUtils3Http {
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                dismissDialog(mContext);
                 if (result != null) {
                     Log.d("PG", url + "接口返回" + result);
                     baseModel baseModel = GsonUtil.getInstance().json2Bean(result, baseModel.class);
@@ -140,36 +149,42 @@ public class xUtils3Http {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                dismissDialog(mContext);
                 if (ex instanceof HttpException) { // 网络错误
                     HttpException httpEx = (HttpException) ex;
                     int responseCode = httpEx.getCode();
                     String responseMsg = httpEx.getMessage();
                     String errorResult = httpEx.getResult();
-                    if (responseCode == 401){
+                    if (responseCode == 401) {
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
                     }
-                }else {
+                } else {
 
                     String errorMes = "Failed to connect to /139.9.121.19:8088";
                     if (TextUtils.equals(errorMes, ex.getMessage())) {
                         Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();
                     }
                 }
-                    if (callback != null) {
-                        callback.failed();
-                    }
+                if (callback != null) {
+                    callback.failed();
+                }
 
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
+                //网络请求结束后关闭对话框
+//                dismissDialog(mContext);
             }
 
             @Override
             public void onFinished() {
+                //网络请求结束后关闭对话框
+                dismissDialog(mContext);
             }
+
         });
     }
 
@@ -276,6 +291,61 @@ public class xUtils3Http {
 //            }
 //        });
 //    }
+
+    public void setDialogMessage(String dialogMessage) {
+        this.dialogMessage = dialogMessage;
+    }
+
+
+    /**
+     * 显示等待对话框
+     */
+    private static void showDialog(Context context) {
+        if (context == null) {
+            return;
+        }
+        if (mDialog == null) {
+            mDialog = new LoadingDialog(context,dialogMessage);
+        }
+        mDialog.setCancelable(false);
+        mDialog.setCanceledOnTouchOutside(false);
+        if (!mDialog.isShowing()){
+            if (context instanceof FragmentActivity) {
+                if (!((FragmentActivity) context).isDestroyed()) {
+                    mDialog.show();
+                }
+
+            } else if (context instanceof Activity) {
+                if (!((Activity) context).isDestroyed()) {
+                    mDialog.show();
+                }
+
+            }
+        }
+    }
+
+    /**
+     * 关闭等待对话框
+     */
+    private static void dismissDialog(Context context) {
+        if (mDialog != null && mDialog.isShowing()) {
+            if (context instanceof FragmentActivity) {
+                if (!((FragmentActivity) context).isDestroyed()) {
+                    mDialog.dismiss();
+                    mDialog = null;
+                }
+            } else if (context instanceof Activity) {
+                if (!((Activity) context).isDestroyed()) {
+                    mDialog.dismiss();
+                    mDialog = null;
+                }
+
+            }
+
+        }
+
+    }
+
 
 
     public interface GetDataCallback {

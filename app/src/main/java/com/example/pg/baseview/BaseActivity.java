@@ -26,6 +26,7 @@ import com.example.pg.R;
 import com.example.pg.common.titlebar.CustomTitleBar;
 import com.example.pg.common.utils.StringUtil;
 import com.example.pg.common.utils.T;
+import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -111,11 +112,11 @@ public abstract class BaseActivity extends FragmentActivity implements CustomTit
      * 设置状态栏
      */
     protected void setStatusBar() {
-//        ImmersionBar.with(this)
-//                .fitsSystemWindows(true)
-//                .statusBarColor(R.color.white)     //状态栏颜色，不写默认透明色
-//                .statusBarDarkFont(true)
-//                .init();
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarColor(R.color.white)     //状态栏颜色，不写默认透明色
+                .statusBarDarkFont(true)
+                .init();
     }
 
 

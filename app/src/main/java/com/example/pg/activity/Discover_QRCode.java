@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.common.utils.L;
+import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,15 @@ public class Discover_QRCode extends BaseActivity implements QRCodeView.Delegate
         Intent intent = new Intent(context, Discover_QRCode.class);
         context.startActivity(intent);
     }
+    /**
+     * 设置状态栏
+     */
+    private void setBar() {
+        ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .statusBarDarkFont(true)
+                .init();
+    }
 
     @Override
     protected int getLayoutId() {
@@ -41,6 +51,10 @@ public class Discover_QRCode extends BaseActivity implements QRCodeView.Delegate
     }
 
 
+    @Override
+    protected void setStatusBar() {
+        setBar();
+    }
 
     @Override
     protected void initView() {

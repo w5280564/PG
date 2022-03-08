@@ -3,6 +3,7 @@ package com.example.pg.baseview;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.webkit.WebView;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.multidex.BuildConfig;
@@ -35,6 +36,7 @@ public class MyApplication extends MultiDexApplication {
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG); // 是否输出debug日志, 开启debug会影响性能.
         MMKV.initialize(this);
+
     }
 
 

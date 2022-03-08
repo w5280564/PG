@@ -94,7 +94,7 @@
         app:arrowItemShowAvatar="false"
         app:arrowItemTitle="GTIN"
         app:arrowItemTitleColor="@color/text_color_444444"
-        app:layout_constraintTop_toBottomOf="@id/lineCode_MyView" />
+        app:layout_constraintTop_toBottomOf="@id/agLevel_MyView" />
 
     <com.example.pg.baseview.MyArrowItemView
         android:id="@+id/batchNo_MyView"

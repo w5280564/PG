@@ -89,7 +89,14 @@ public class QRDetail_Production_Fragment extends BaseLazyFragment {
                     originalValue(login_bean.getData().getProductName(), "暂未填写", "", productName_MyView.getTvContent());
                     originalValue(login_bean.getData().getPlantName(), "暂未填写", "", PlantName_MyView.getTvContent());
                     originalValue(login_bean.getData().getPlantCode(), "暂未填写", "", plantCode_MyView.getTvContent());
-                    originalValue(login_bean.getData().getAggregationLevel(), "暂未填写", "", agLevel_MyView.getTvContent());
+
+//                    originalValue(login_bean.getData().getAggregationLevel(), "暂未填写", "", agLevel_MyView.getTvContent());
+                    String aggregationLevel = login_bean.getData().getAggregationLevel();
+                    if (TextUtils.equals(aggregationLevel,"3")){
+                        agLevel_MyView.getTvContent().setText("Case");
+                    }else {
+                        agLevel_MyView.getTvContent().setText("Item");
+                    }
                     originalValue(login_bean.getData().getLineCode(), "暂未填写", "", lineCode_MyView.getTvContent());
                     originalValue(login_bean.getData().getGtin(), "暂未填写", "", gtin_MyView.getTvContent());
                     originalValue(login_bean.getData().getBatchNo(), "暂未填写", "", batchNo_MyView.getTvContent());

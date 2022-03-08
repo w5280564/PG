@@ -3,24 +3,49 @@ package com.example.pg.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
+import com.example.pg.baseview.WebViewPools;
 import com.example.pg.bean.Login_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.L;
 import com.example.pg.common.utils.xUtils3Http;
+import com.gyf.barlibrary.ImmersionBar;
 import com.tencent.mmkv.MMKV;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends BaseActivity {
-    private WebView web_view;
+    private WebView x5Webview;
     private String authCode = "";
+    private ConstraintLayout web_Con;
+
+
+    /**
+     * 设置状态栏
+     */
+    private void setBar() {
+        ImmersionBar.with(this)
+                .fitsSystemWindows(false)
+                .statusBarDarkFont(true)
+                .init();
+    }
+
+    @Override
+    protected void setStatusBar() {
+        setBar();
+    }
+
 
     @Override
     protected int getLayoutId() {
@@ -29,7 +54,10 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        web_view = findViewById(R.id.web_view);
+        web_Con = findViewById(R.id.web_Con);
+        x5Webview = WebViewPools.getInstance().acquireWebView(this);
+        web_Con.addView(x5Webview, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         initJS();
         String url = xUtils3Http.SSO_PingID;
         initWebView(url);
@@ -40,13 +68,21 @@ public class LoginActivity extends BaseActivity {
     protected void getServerData() {
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        web_Con.removeAllViews();
+        WebViewPools.getInstance().recycle(x5Webview);
+    }
+
     /**
      * 加载地址
      *
      * @param url
      */
     private void initWebView(String url) {
-        web_view.loadUrl(url);
+        x5Webview.loadUrl(url);
     }
 
     /**
@@ -54,15 +90,15 @@ public class LoginActivity extends BaseActivity {
      */
     @SuppressLint("SetJavaScriptEnabled")
     private void initJS() {
-        web_view.getSettings().setJavaScriptEnabled(true);
-        web_view.getSettings().setDomStorageEnabled(true);
+        x5Webview.getSettings().setJavaScriptEnabled(true);
+        x5Webview.getSettings().setDomStorageEnabled(true);
     }
 
     /**
      * 拦截地址后的authCode
      */
     private void getCode() {
-        web_view.setWebViewClient(new WebViewClient() {
+        x5Webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String code = "code=";

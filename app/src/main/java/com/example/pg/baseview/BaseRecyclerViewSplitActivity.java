@@ -20,7 +20,7 @@ public abstract class BaseRecyclerViewSplitActivity extends BaseActivity impleme
     protected RecyclerView mRecyclerView;
     protected BaseQuickAdapter mAdapter;
     protected int page = 1;
-    protected int limit = 30;
+    protected int limit = 10;
 
 
     @Override
