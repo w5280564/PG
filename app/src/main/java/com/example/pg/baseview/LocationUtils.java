@@ -155,7 +155,7 @@ public class LocationUtils {
                 Geocoder gc = new Geocoder(mContext, Locale.getDefault());
                 result = gc.getFromLocation(location.getLatitude(),
                         location.getLongitude(), 1);
-                Toast.makeText(mContext, "获取地址信息："+result.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext, "获取地址信息："+result.toString(), Toast.LENGTH_LONG).show();
                 Log.d("TAG", "获取地址信息："+result.toString());
             }
         } catch (Exception e) {

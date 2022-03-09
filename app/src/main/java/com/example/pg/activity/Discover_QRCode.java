@@ -88,24 +88,28 @@ public class Discover_QRCode extends BaseActivity implements QRCodeView.Delegate
         super.onDestroy();
     }
 
+
     @Override
     public void onScanQRCodeSuccess(String result) {
         if (TextUtils.isEmpty(result)) {
             Toast.makeText(mContext, "无法识别", Toast.LENGTH_SHORT).show();
-            return;
+//            return;
+            vibrate();
+            mZXingView.startSpot(); // 开始识别
+        }else {
+
+            L.d("PG","result>>>"+result);
+            if (!TextUtils.isEmpty(result)) {
+                QRDetail_Activity.startActivity(mActivity,result);
+                finish();
+         }
         }
-        L.d("PG","result>>>"+result);
-        if (!TextUtils.isEmpty(result)) {
-            QRDetail_Activity.startActivity(mActivity,result);
-            finish();
-        }
-        vibrate();
-//        mZXingView.startSpot(); // 开始识别
+
     }
 
     private void vibrate() {
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(200);
+        vibrator.vibrate(1000);
     }
 
 

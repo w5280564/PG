@@ -130,7 +130,7 @@ public class StatisticalDetail_One_Activity extends BaseRecyclerViewSplitActivit
     public void post(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("current",page);
-        map.put("size",limit);
+        map.put("size",30);
         map.put("dcCode",dcCode);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
@@ -157,7 +157,8 @@ public class StatisticalDetail_One_Activity extends BaseRecyclerViewSplitActivit
     public void postOther(Context context, String baseUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("current", page);
-        map.put("size", limit);
+        map.put("size", 30);
+        map.put("dcCode",dcCode);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
