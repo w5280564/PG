@@ -25,12 +25,13 @@ import java.util.Map;
 
 public class xUtils3Http {
     private static LoadingDialog mDialog;
-    private static String dialogMessage="";
+    private static String dialogMessage = "";
     //    public static final String BASE_URL = "https://qa-dtt-mobile.pg.com.cn";
     public static final String SSO_BASE_URL = "https://dtt-mobile.pg.com.cn";
     public static String TOKEN = "token";
     public static String Data = "data";//用户短名
     public static String UserData = "user";//用户信息
+    public static String Acf_Bean = "acf_bean";//
 
     public static final String QA_Marken_URL = "https://qa-dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯QA地址
     public static final String PRD_Marken_URL = "https://dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯PRO地址
@@ -107,6 +108,91 @@ public class xUtils3Http {
 
     public static void post(Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
         showDialog(mContext);
+        RequestParams params = new RequestParams(url);
+        if (parms != null) {
+            for (String key : parms.keySet()) {
+                params.addBodyParameter(key, parms.get(key));
+            }
+        }
+        MMKV mmkv = MMKV.defaultMMKV();
+        if (!TextUtils.isEmpty(mmkv.decodeString(TOKEN))) {
+//            params.addHeader("Content-Type", "application/json;charset=UTF-8");
+//            String s = "eyJhbGciOiJSUzUxMiIsImtpZCI6IjEifQ.eyJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiR0RQUiJdLCJjbGllbnRfaWQiOiJCMkIgUFJEIFNTTyIsIlVpZCI6IkRaODY3MiIsIlNob3J0TmFtZSI6ImxpdS5sLjQ5IiwiTGFzdE5hbWUiOiJsaXUiLCJVc2VybmFtZSI6InVpZD1EWjg2NzIsb3U9cGVvcGxlLG91PXBnLG89d29ybGQiLCJGaXJzdE5hbWUiOiJsaW5hIiwiZXhwIjoxNjQ2NDU5MDY5fQ.ZANwjmNLkugd8S3nc_1uK0QNnlvWqDQi0yvLuXUZw3wCJHzSFlWjCHZ-OKm-EvuxpCRSsSG2-ZY7t8OG20WE_RTd5ZcMY4lklQZ0E4lyxVshF_c56Z82R6Wq0AvMuQ1BG2I-xVfyAzSuuu3aeFP__V5uXEqO7JmVmMgYbfaHCVx2yvIwQUj6nt7qcSMIely6KAuW1azrZSnop92eK-tAWgeROUUQNqVA1yjSUcsK8VSksUKavUo0mFvpre2K6KbV0aH0FytrH4o797BePH2h6RVYcD2CezuekVpsodjDve6P7HQsXmN1FpKCI3lwqyBnQrWcvHaF8OljqHzEFIr3KA";
+            params.addHeader("Authorization", mmkv.decodeString(TOKEN));
+            params.addHeader("Ocp-Apim-Subscription-Key", "0143fb1763a0478cba1379682a52e077");
+            params.addHeader("Auth-Type", "ssofed");
+        }
+        params.setBodyContentType("application/json;charset=UTF-8");
+        params.setAsJsonContent(true);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                dismissDialog(mContext);
+                if (result != null) {
+                    Log.d("PG", url + "接口返回" + result);
+                    baseModel baseModel = GsonUtil.getInstance().json2Bean(result, baseModel.class);
+                    String message = baseModel.getMessage();
+                    String msg = baseModel.getMsg();
+                    String code = baseModel.getCode();
+                    String state = baseModel.getState();
+                    if (TextUtils.equals(code, "0") || TextUtils.equals(state, "1") || TextUtils.equals(message, "true") || TextUtils.equals(msg, "success")) {
+                        if (callback != null) {
+                            callback.success(result);
+                        }
+                    } else {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                dismissDialog(mContext);
+                if (ex instanceof HttpException) { // 网络错误
+                    HttpException httpEx = (HttpException) ex;
+                    int responseCode = httpEx.getCode();
+                    String responseMsg = httpEx.getMessage();
+                    String errorResult = httpEx.getResult();
+                    if (responseCode == 401) {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    }
+                } else {
+
+                    String errorMes = "Failed to connect to /139.9.121.19:8088";
+                    if (TextUtils.equals(errorMes, ex.getMessage())) {
+                        Toast.makeText(mContext, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show();
+                    }
+                }
+                if (callback != null) {
+                    callback.failed();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                //网络请求结束后关闭对话框
+//                dismissDialog(mContext);
+            }
+
+            @Override
+            public void onFinished() {
+                //网络请求结束后关闭对话框
+                dismissDialog(mContext);
+            }
+
+        });
+    }
+
+    public static void post(boolean isShowDialog, Context mContext, String url, Map<String, Object> parms, final GetDataCallback callback) {
+        if (isShowDialog) {
+            showDialog(mContext);
+        }
         RequestParams params = new RequestParams(url);
         if (parms != null) {
             for (String key : parms.keySet()) {
@@ -305,11 +391,11 @@ public class xUtils3Http {
             return;
         }
         if (mDialog == null) {
-            mDialog = new LoadingDialog(context,dialogMessage);
+            mDialog = new LoadingDialog(context, dialogMessage);
         }
         mDialog.setCancelable(false);
         mDialog.setCanceledOnTouchOutside(false);
-        if (!mDialog.isShowing()){
+        if (!mDialog.isShowing()) {
             if (context instanceof FragmentActivity) {
                 if (!((FragmentActivity) context).isDestroyed()) {
                     mDialog.show();
@@ -345,7 +431,6 @@ public class xUtils3Http {
         }
 
     }
-
 
 
     public interface GetDataCallback {

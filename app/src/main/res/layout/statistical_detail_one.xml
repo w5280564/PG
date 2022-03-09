@@ -103,19 +103,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/pagTab"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
+
+    <com.example.pg.baseview.PagTab
+        android:id="@+id/pagTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+        app:number_tip_count="9"
+        app:rect_size="30dp"
+        app:selected_color="@color/indicator_rect_selected"
+        app:text_size="14sp"
+        app:unselected_color="@color/indicator_rect_unselected" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 

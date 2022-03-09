@@ -20,6 +20,7 @@ import com.example.pg.bean.Acf_bean;
 import com.example.pg.bean.Transport_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.xUtils3Http;
+import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 public class QRDetail_ACF_Fragment extends BaseLazyFragment {
     private String sn;
-    private RecyclerView mRecyclerView,threeRecyclerVie,TimeRecyclerVie;
+    private RecyclerView mRecyclerView, threeRecyclerVie, TimeRecyclerVie;
     private MyAcfAdapter mAdapter;
     private MyAcfAdapter threeAdapter;
     private MyAcfTimeAdapter TimeAdapter;
@@ -69,28 +70,68 @@ public class QRDetail_ACF_Fragment extends BaseLazyFragment {
         initRecyclerView();
         initThreeRecyclerView();
         initTimeRecyclerVie();
+
+        getMMkvData();
+
     }
+
+    private void getMMkvData() {
+        MMKV mmkv = MMKV.defaultMMKV();
+        String s = mmkv.decodeString(xUtils3Http.Acf_Bean);
+        Acf_bean acf_bean = GsonUtil.getInstance().json2Bean(s, Acf_bean.class);
+        if (acf_bean != null) {
+            addAcf(acf_bean);
+        } else {
+            post(requireActivity(), xUtils3Http.BASE_URL + xUtils3Http.ACF);
+        }
+    }
+
+
+    private void addAcf(Acf_bean acf_bean) {
+
+        if (acf_bean != null) {
+            List<String> topImgList = new ArrayList<>();
+            for (int i = 0; i < 15; i++) {
+                topImgList.add(acf_bean.getData().get(i));
+            }
+            mAdapter.addData(topImgList);
+            List<String> threeImgList = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                threeImgList.add(acf_bean.getData().get(i + topImgList.size()));
+            }
+            threeAdapter.addData(threeImgList);
+
+            List<String> timeImgList = new ArrayList<>();
+            for (int i = 0; i < 6; i++) {
+                int index = topImgList.size() + threeImgList.size() + i;
+                timeImgList.add(acf_bean.getData().get(index));
+            }
+            TimeAdapter.addData(timeImgList);
+        }
+    }
+
 
     @Override
     protected void loadData() {
-        post(requireActivity(), xUtils3Http.BASE_URL + xUtils3Http.ACF);
+//        post(requireActivity(), xUtils3Http.BASE_URL + xUtils3Http.ACF);
     }
 
 
     public void initRecyclerView() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(requireActivity(),5);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(requireActivity(), 5);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mAdapter = new MyAcfAdapter();
         mRecyclerView.setAdapter(mAdapter);
     }
+
     public void initThreeRecyclerView() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(requireActivity(),3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(requireActivity(), 3);
         threeRecyclerVie.setLayoutManager(gridLayoutManager);
         threeAdapter = new MyAcfAdapter();
         threeRecyclerVie.setAdapter(threeAdapter);
     }
 
-        public void initTimeRecyclerVie() {
+    public void initTimeRecyclerVie() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         TimeRecyclerVie.setLayoutManager(linearLayoutManager);
@@ -114,26 +155,7 @@ public class QRDetail_ACF_Fragment extends BaseLazyFragment {
             public void success(String result) {
                 Acf_bean acf_bean = GsonUtil.getInstance().json2Bean(result, Acf_bean.class);
                 if (acf_bean != null) {
-                    List<String> topImgList = new ArrayList<>();
-                    for (int i=0;i<15;i++){
-                        topImgList.add(acf_bean.getData().get(i));
-                    }
-                    mAdapter.addData(topImgList);
-                    List<String> threeImgList = new ArrayList<>();
-                     for (int i=0;i<3;i++){
-                         threeImgList.add(acf_bean.getData().get(i+topImgList.size()));
-                    }
-                    threeAdapter.addData(threeImgList);
-
-                    List<String> timeImgList = new ArrayList<>();
-                     for (int i=0;i<6;i++){
-                         int index = topImgList.size()+threeImgList.size()+i;
-                         timeImgList.add(acf_bean.getData().get(index));
-                    }
-                    TimeAdapter.addData(timeImgList);
-
-
-
+                    addAcf(acf_bean);
                 }
             }
 

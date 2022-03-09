@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.pg.R;
 import com.example.pg.adapter.Statistical_item_Adapter;
 import com.example.pg.baseview.BaseRecyclerViewSplitActivity;
+import com.example.pg.baseview.PagTab;
 import com.example.pg.baseview.PageControl;
 import com.example.pg.bean.Statistical_Bean;
 import com.example.pg.bean.Statistical_List_Bean;
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
     private RecyclerView mRecyclerView;
-    private PageControl pageControl;
+    private PagTab pagTab;
 //    private PaginationIndicator indicator;
 
     /**
@@ -66,29 +67,26 @@ public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
 
     @Override
     protected void initView() {
-        pageControl = findViewById(R.id.pageControl);
-//        indicator = findViewById(R.id.indicator);
-
-//        indicator.setPerPageCountChoices(perPageCountChoices); // 选填
-//        indicator.setmListener(new PaginationIndicator.OnChangedListener() {
-//            @Override
-//            public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
+        pagTab = findViewById(R.id.pagTab);
+        pagTab.setmListener(new PagTab.OnChangedListener() {
+            @Override
+            public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
 //                Toast.makeText(StatisticalDetail_Activity.this, "选中" + currentPapePos + "页", Toast.LENGTH_LONG).show();
-//                page = currentPapePos;
-//                getServerData();
-//            }
-//
-//            @Override
-//            public void onPerPageCountChanged(int perPageCount) {
-//                // x条/页 选项改变时触发
-//            }
-//        });
+                page = currentPapePos;
+                postOther(mActivity, xUtils3Http.BASE_URL + xUtils3Http.Dcreport);
+            }
+
+            @Override
+            public void onPerPageCountChanged(int perPageCount) {
+                // x条/页 选项改变时触发
+            }
+        });
 
         mRecyclerView = findViewById(R.id.mRecyclerView);
-        mSwipeRefreshLayout = findViewById(R.id.refresh_layout);
-        mSwipeRefreshLayout.setRefreshing(true);
+//        mSwipeRefreshLayout = findViewById(R.id.refresh_layout);
+//        mSwipeRefreshLayout.setRefreshing(true);
         initRecyclerView();
-        initSwipeRefreshLayoutAndAdapter("暂无数据", 0, true);
+//        initSwipeRefreshLayoutAndAdapter("暂无数据", 0, true);
     }
 
     @Override
@@ -137,17 +135,46 @@ public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
+//                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
+//                    mSwipeRefreshLayout.setRefreshing(false);
+//                }
                 String data = GsonUtil.getInstance().getValue(result, "data");
                 Statistical_List_Bean statisticalListBean = GsonUtil.getInstance().json2Bean(data, Statistical_List_Bean.class);
                 if (statisticalListBean != null) {
-                    handleSplitListData(statisticalListBean, mAdapter, limit);
-                    Integer totalElements = statisticalListBean.getTotalElements();
-//                    indicator.setTotalCount(totalElements);  // 设置数据源总数量即可
-                    int i = Integer.parseInt(statisticalListBean.getTotalPages());
-                    pageControl.setTotalPage(i);
+//                    handleSplitListData(statisticalListBean, mAdapter, limit);
+//                    Integer totalElements = statisticalListBean.getTotalElements();
+////                    indicator.setTotalCount(totalElements);  // 设置数据源总数量即可
+//                    int i = Integer.parseInt(statisticalListBean.getTotalPages());
+//                    pagTab.setTotalCount(i);
+
+                    mAdapter.setNewData(statisticalListBean.getContent());
+                    Integer totalElements = Integer.valueOf(statisticalListBean.getTotalElements());
+                    pagTab.setTotalCount(totalElements);
+                }
+            }
+
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
+    public void postOther(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("current", page);
+        map.put("size", limit);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+//                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
+//                    mSwipeRefreshLayout.setRefreshing(false);
+//                }
+                String data = GsonUtil.getInstance().getValue(result, "data");
+                Statistical_List_Bean statisticalListBean = GsonUtil.getInstance().json2Bean(data, Statistical_List_Bean.class);
+                if (statisticalListBean != null) {
+                    mRecyclerView.removeAllViews();
+                    mAdapter.setNewData(statisticalListBean.getContent());
                 }
             }
 

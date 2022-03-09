@@ -7,14 +7,21 @@ import android.content.Intent;
 
 import com.example.pg.R;
 import com.example.pg.baseview.BaseTabLayoutActivity;
+import com.example.pg.bean.Acf_bean;
 import com.example.pg.bean.AppMenuBean;
+import com.example.pg.common.utils.GsonUtil;
+import com.example.pg.common.utils.xUtils3Http;
 import com.example.pg.fragment.QRDetail_ACF_Fragment;
 import com.example.pg.fragment.QRDetail_Production_Fragment;
 import com.example.pg.fragment.QRDetail_Receipt_Fragment;
 import com.example.pg.fragment.QRDetail_Transport_Fragment;
 import com.gyf.barlibrary.ImmersionBar;
+import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -67,6 +74,11 @@ public class QRDetail_Activity extends BaseTabLayoutActivity {
         initMenuData();
     }
 
+    @Override
+    protected void getServerData() {
+        post(mActivity, xUtils3Http.BASE_URL + xUtils3Http.ACF);
+    }
+
     @SuppressLint("WrongConstant")
     private void initMenuData() {
         ArrayList<String> tabName = new ArrayList<>();
@@ -85,6 +97,54 @@ public class QRDetail_Activity extends BaseTabLayoutActivity {
         fragments.add(QRDetail_ACF_Fragment.newInstance(sn));
         initViewPager(0);
     }
+
+    /**
+     * acf
+     *
+     * @param context
+     * @param baseUrl
+     */
+    public void post(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+//        sn = "http://weixin.qq.com/r/GTp-Z7zEmuHlrfgE928L/56903148138255/31389625292133367265/13191864H0/20241114/82313294";
+        map.put("sn", sn);
+        xUtils3Http.post(false,context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                Acf_bean acf_bean = GsonUtil.getInstance().json2Bean(result, Acf_bean.class);
+                if (acf_bean != null) {
+                    MMKV mmkv = MMKV.defaultMMKV();
+                    mmkv.encode(xUtils3Http.Acf_Bean,  result);
+//                    List<String> topImgList = new ArrayList<>();
+//                    for (int i=0;i<15;i++){
+//                        topImgList.add(acf_bean.getData().get(i));
+//                    }
+//                    mAdapter.addData(topImgList);
+//                    List<String> threeImgList = new ArrayList<>();
+//                    for (int i=0;i<3;i++){
+//                        threeImgList.add(acf_bean.getData().get(i+topImgList.size()));
+//                    }
+//                    threeAdapter.addData(threeImgList);
+//
+//                    List<String> timeImgList = new ArrayList<>();
+//                    for (int i=0;i<6;i++){
+//                        int index = topImgList.size()+threeImgList.size()+i;
+//                        timeImgList.add(acf_bean.getData().get(index));
+//                    }
+//                    TimeAdapter.addData(timeImgList);
+
+
+
+                }
+            }
+
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
 
 
 }

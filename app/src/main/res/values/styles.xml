@@ -111,4 +111,20 @@
     </style>
 
 
+    <color name="indicator_rect_selected">#1895FF</color>
+    <color name="indicator_rect_unselected">#A7A7A7</color>
+
+    <declare-styleable name="PaginationIndicator">
+        <attr format="integer" name="number_tip_count"/>
+        <attr format="color" name="selected_color"/>
+        <attr format="color" name="unselected_color"/>
+        <attr format="dimension" name="text_size"/>
+        <attr format="dimension" name="rect_size"/>
+
+    </declare-styleable>
+    <declare-styleable name="PaginationRecycleView" parent="PaginationIndicator">
+
+    </declare-styleable>
+
+
 </resources>

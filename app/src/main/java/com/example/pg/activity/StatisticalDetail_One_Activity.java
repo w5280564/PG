@@ -13,6 +13,7 @@ import com.example.pg.R;
 import com.example.pg.adapter.Statistical_item_Adapter;
 import com.example.pg.adapter.Statistical_item_One_Adapter;
 import com.example.pg.baseview.BaseRecyclerViewSplitActivity;
+import com.example.pg.baseview.PagTab;
 import com.example.pg.bean.Statistical_List_Bean;
 import com.example.pg.common.titlebar.CustomTitleBar;
 import com.example.pg.common.utils.GsonUtil;
@@ -30,6 +31,7 @@ public class StatisticalDetail_One_Activity extends BaseRecyclerViewSplitActivit
     private RecyclerView mRecyclerView;
     private String dcCode,dcName;
     private CustomTitleBar title_bar;
+    private PagTab pagTab;
 
     /**
      * @param context
@@ -72,13 +74,26 @@ public class StatisticalDetail_One_Activity extends BaseRecyclerViewSplitActivit
 
     @Override
     protected void initView() {
+        pagTab = findViewById(R.id.pagTab);
+        pagTab.setmListener(new PagTab.OnChangedListener() {
+            @Override
+            public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
+//                Toast.makeText(Customer_Detail_Activity.this, "选中" + currentPapePos + "页", Toast.LENGTH_LONG).show();
+                page = currentPapePos;
+                postOther(mActivity, xUtils3Http.BASE_URL+xUtils3Http.Dcreport_Detail);
+            }
+
+            @Override
+            public void onPerPageCountChanged(int perPageCount) {
+                // x条/页 选项改变时触发
+            }
+        });
+
         title_bar = findViewById(R.id.title_bar);
         title_bar.setTitle(dcName);
         mRecyclerView = findViewById(R.id.mRecyclerView);
-        mSwipeRefreshLayout = findViewById(R.id.refresh_layout);
-        mSwipeRefreshLayout.setRefreshing(true);
         initRecyclerView();
-        initSwipeRefreshLayoutAndAdapter("暂无数据", 0, true);
+//        initSwipeRefreshLayoutAndAdapter("暂无数据", 0, true);
     }
 
     @Override
@@ -120,12 +135,16 @@ public class StatisticalDetail_One_Activity extends BaseRecyclerViewSplitActivit
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
+//                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
+//                    mSwipeRefreshLayout.setRefreshing(false);
+//                }
                 String data = GsonUtil.getInstance().getValue(result, "data");
                 Statistical_List_Bean statisticalListBean = GsonUtil.getInstance().json2Bean(data, Statistical_List_Bean.class);
-                handleSplitListData(statisticalListBean, mAdapter, limit);
+                if (statisticalListBean != null) {
+                    mAdapter.setNewData(statisticalListBean.getContent());
+                    Integer totalElements = Integer.valueOf(statisticalListBean.getTotalElements());
+                    pagTab.setTotalCount(totalElements);
+                }
 
             }
             @Override
@@ -134,6 +153,28 @@ public class StatisticalDetail_One_Activity extends BaseRecyclerViewSplitActivit
             }
         });
     }
+
+    public void postOther(Context context, String baseUrl) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("current", page);
+        map.put("size", limit);
+        xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
+            @Override
+            public void success(String result) {
+                String data = GsonUtil.getInstance().getValue(result, "data");
+                Statistical_List_Bean statisticalListBean = GsonUtil.getInstance().json2Bean(data, Statistical_List_Bean.class);
+                if (statisticalListBean != null) {
+                    mRecyclerView.removeAllViews();
+                    mAdapter.setNewData(statisticalListBean.getContent());
+                }
+            }
+            @Override
+            public void failed(String... args) {
+
+            }
+        });
+    }
+
 
 
 
