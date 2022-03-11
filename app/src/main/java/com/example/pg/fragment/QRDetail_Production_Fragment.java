@@ -85,10 +85,10 @@ public class QRDetail_Production_Fragment extends BaseLazyFragment {
                 Production_Bean login_bean = GsonUtil.getInstance().json2Bean(result, Production_Bean.class);
                 if (login_bean != null) {
 
-                    originalValue(login_bean.getData().getProductNo(), "暂未填写", "", productNo_MyView.getTvContent());
-                    originalValue(login_bean.getData().getProductName(), "暂未填写", "", productName_MyView.getTvContent());
-                    originalValue(login_bean.getData().getPlantName(), "暂未填写", "", PlantName_MyView.getTvContent());
-                    originalValue(login_bean.getData().getPlantCode(), "暂未填写", "", plantCode_MyView.getTvContent());
+                    originalValue(login_bean.getData().getProductNo(), "暂无数据", "", productNo_MyView.getTvContent());
+                    originalValue(login_bean.getData().getProductName(), "暂无数据", "", productName_MyView.getTvContent());
+                    originalValue(login_bean.getData().getPlantName(), "暂无数据", "", PlantName_MyView.getTvContent());
+                    originalValue(login_bean.getData().getPlantCode(), "暂无数据", "", plantCode_MyView.getTvContent());
 
 //                    originalValue(login_bean.getData().getAggregationLevel(), "暂未填写", "", agLevel_MyView.getTvContent());
                     String aggregationLevel = login_bean.getData().getAggregationLevel();
@@ -97,16 +97,16 @@ public class QRDetail_Production_Fragment extends BaseLazyFragment {
                     }else {
                         agLevel_MyView.getTvContent().setText("Item");
                     }
-                    originalValue(login_bean.getData().getLineCode(), "暂未填写", "", lineCode_MyView.getTvContent());
-                    originalValue(login_bean.getData().getGtin(), "暂未填写", "", gtin_MyView.getTvContent());
-                    originalValue(login_bean.getData().getBatchNo(), "暂未填写", "", batchNo_MyView.getTvContent());
-                    originalValue(login_bean.getData().getProductDate(), "暂未填写", "", productDate_MyView.getTvContent());
+                    originalValue(login_bean.getData().getLineCode(), "暂无数据", "", lineCode_MyView.getTvContent());
+                    originalValue(login_bean.getData().getGtin(), "暂无数据", "", gtin_MyView.getTvContent());
+                    originalValue(login_bean.getData().getBatchNo(), "暂无数据", "", batchNo_MyView.getTvContent());
+                    originalValue(login_bean.getData().getProductDate(), "暂无数据", "", productDate_MyView.getTvContent());
                 }
             }
 
             @Override
             public void failed(String... args) {
-
+                requireActivity().finish();
             }
         });
     }

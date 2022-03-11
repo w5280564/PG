@@ -16,6 +16,7 @@
         app:titleBarLeftImg="@mipmap/icon_back"
         app:titleBarRightShowType="IMG"
         app:titleBarShowBottomLine="false"
+        app:titleColor="@color/white"
         app:titleBarTitle="扫码追踪明细"/>
 
     <com.google.android.material.tabs.TabLayout

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -43,11 +44,14 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.mmkv.MMKV;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -88,10 +92,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Statistics_Tv = findMyViewById(R.id.Statistics_Tv);
         maken_Con = findMyViewById(R.id.maken_Con);
         getIP();
-        getLocation();
+//        getLocation();
         startLocation();
-
-
     }
 
     @Override

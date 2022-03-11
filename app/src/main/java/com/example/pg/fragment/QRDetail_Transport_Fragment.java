@@ -86,15 +86,15 @@ public class QRDetail_Transport_Fragment extends BaseLazyFragment {
                 Transport_Bean transport_bean = GsonUtil.getInstance().json2Bean(result, Transport_Bean.class);
                 if (transport_bean != null) {
 
-                    originalValue(transport_bean.getData().getTaskNo(), "暂未填写", "", taskNo_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getVehicleNo(), "暂未填写", "", vehicleNo_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getShiptoCode(), "暂未填写", "", shiptoCode_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getShiptoName(), "暂未填写", "", shiptoName_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getDeliveryCode(), "暂未填写", "", deliveryCode_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getSendCode(), "暂未填写", "", sendCode_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getSendName(), "暂未填写", "", sendName_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getSendTime(), "暂未填写", "", sendTime_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getShipmentOrderStatus(), "暂未填写", "", state_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getTaskNo(), "暂无数据", "", taskNo_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getVehicleNo(), "暂无数据", "", vehicleNo_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getShiptoCode(), "暂无数据", "", shiptoCode_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getShiptoName(), "暂无数据", "", shiptoName_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getDeliveryCode(), "暂无数据", "", deliveryCode_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getSendCode(), "暂无数据", "", sendCode_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getSendName(), "暂无数据", "", sendName_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getSendTime(), "暂无数据", "", sendTime_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getShipmentOrderStatus(), "暂无数据", "", state_MyView.getTvContent());
 
 //                    Object shipmentOrderStatus = transport_bean.getData().getShipmentOrderStatus();
 //                    //1:received 2:receiving 3:reject 4:no QR

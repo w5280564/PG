@@ -76,7 +76,7 @@ public class QRDetail_Activity extends BaseTabLayoutActivity {
 
     @Override
     protected void getServerData() {
-        post(mActivity, xUtils3Http.BASE_URL + xUtils3Http.ACF);
+//        post(mActivity, xUtils3Http.BASE_URL + xUtils3Http.ACF);
     }
 
     @SuppressLint("WrongConstant")
@@ -115,32 +115,11 @@ public class QRDetail_Activity extends BaseTabLayoutActivity {
                 if (acf_bean != null) {
                     MMKV mmkv = MMKV.defaultMMKV();
                     mmkv.encode(xUtils3Http.Acf_Bean,  result);
-//                    List<String> topImgList = new ArrayList<>();
-//                    for (int i=0;i<15;i++){
-//                        topImgList.add(acf_bean.getData().get(i));
-//                    }
-//                    mAdapter.addData(topImgList);
-//                    List<String> threeImgList = new ArrayList<>();
-//                    for (int i=0;i<3;i++){
-//                        threeImgList.add(acf_bean.getData().get(i+topImgList.size()));
-//                    }
-//                    threeAdapter.addData(threeImgList);
-//
-//                    List<String> timeImgList = new ArrayList<>();
-//                    for (int i=0;i<6;i++){
-//                        int index = topImgList.size()+threeImgList.size()+i;
-//                        timeImgList.add(acf_bean.getData().get(index));
-//                    }
-//                    TimeAdapter.addData(timeImgList);
-
-
-
                 }
             }
-
             @Override
             public void failed(String... args) {
-
+                finish();
             }
         });
     }

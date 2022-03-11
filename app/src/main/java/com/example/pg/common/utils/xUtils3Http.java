@@ -139,7 +139,11 @@ public class xUtils3Http {
                         if (callback != null) {
                             callback.success(result);
                         }
-                    } else {
+                    } else if (TextUtils.equals(state, "0")) {
+                        T.s(baseModel.getMsg(),2000);
+                        callback.failed();
+
+                    }else {
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
@@ -224,7 +228,12 @@ public class xUtils3Http {
                         if (callback != null) {
                             callback.success(result);
                         }
-                    } else {
+                    } else if (TextUtils.equals(state, "0")) {
+                        T.s(baseModel.getMsg(),2000);
+                        callback.failed();
+
+                    }else {
+
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
