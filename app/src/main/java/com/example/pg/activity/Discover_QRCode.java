@@ -5,18 +5,17 @@ import android.content.Intent;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zxing.ZXingView;
+import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 public class Discover_QRCode extends BaseActivity implements QRCodeView.Delegate {
-    private ZXingView mZXingView;
+    private ZBarView mZXingView;
     private View return_Btn;
 
     public static void actionStart(Context context) {

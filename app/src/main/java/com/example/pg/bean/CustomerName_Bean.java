@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CustomerName_Bean {
 
     @SerializedName("data")
-    private List<DataDTO> data;
+    private List<nameBean> data;
     @SerializedName("state")
     private Integer state;
     @SerializedName("msg")
@@ -20,7 +20,7 @@ public class CustomerName_Bean {
 
     @NoArgsConstructor
     @Data
-    public static class DataDTO {
+    public static class nameBean {
         @SerializedName("shiptoCode")
         private String shiptoCode;
         @SerializedName("shiptoName")

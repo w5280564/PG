@@ -10,14 +10,18 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -27,6 +31,7 @@ import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.baseview.FileUploadTask;
 import com.example.pg.baseview.GlideEnGine;
+import com.example.pg.baseview.GlideUtils;
 import com.example.pg.baseview.LocationUtils;
 import com.example.pg.baseview.NetWorkUtils;
 import com.example.pg.baseview.TwoButtonDialogBlue;
@@ -37,13 +42,17 @@ import com.example.pg.common.utils.L;
 import com.example.pg.common.utils.ListUtils;
 import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.mmkv.MMKV;
+import com.yxing.ScanCodeActivity;
+import com.yxing.ScanCodeConfig;
+import com.yxing.def.ScanStyle;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -53,6 +62,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import cn.bingoogolapple.transformerstip.TransformersTip;
+import cn.bingoogolapple.transformerstip.gravity.TipGravity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -64,6 +76,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String code = "";
     private String name = "";
     private String dept_name = "";
+    private String image_source = "";
 
     @Override
     protected void setStatusBar() {
@@ -144,9 +157,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     if (codeList.contains("440003")) {
                         Statistics_Tv.setVisibility(View.VISIBLE);
                     }
-                if (codeList.contains("440004")) {
-                    maken_Con.setVisibility(View.VISIBLE);
-                }
+                    if (codeList.contains("440004")) {
+                        maken_Con.setVisibility(View.VISIBLE);
+                    }
 
                 }
 
@@ -206,7 +219,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //            if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
             Discover_QRCode.actionStart(context);
 //            }
+//            startQRScan();
         }
+    }
+
+    private void startQRScan() {
+        ScanCodeConfig.create(mActivity)
+                //设置扫码页样式 ScanStyle.NONE：无  ScanStyle.QQ ：仿QQ样式   ScanStyle.WECHAT ：仿微信样式    ScanStyle.CUSTOMIZE ： 自定义样式
+                .setStyle(ScanStyle.QQ)
+                //扫码成功是否播放音效  true ： 播放   false ： 不播放
+                .setPlayAudio(false)
+                .buidler()
+                //跳转扫码页   扫码页可自定义样式
+                .start(ScanCodeActivity.class);
     }
 
     /**
@@ -227,19 +252,47 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             //判断相机是否正常。
             if (captureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
-                setPhotoMetod(mActivity);
+                startLocation();
+                showPhotoPopWindow();
             }
 
         }
     }
 
+    /**
+     * 拍照
+     * @param context
+     */
+    private void setCameraMetod(Context context) {
+        PictureSelector.create((Activity) context)
+                .openCamera(PictureConfig.TYPE_CAMERA)
+                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
+                .imageSpanCount(4)// 每行显示个数 int
+                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
+                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
+                .isPreviewImage(true)// 是否可预览图片 true or false
+                .isCamera(false)// 是否显示拍照按钮 true or false
+                .isEnableCrop(true)//开启裁剪
+                .cropImageWideHigh(200, 200)//裁剪尺寸
+                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                .isCompress(false)// 是否压缩 true or false
+                .forResult(PictureConfig.REQUEST_CAMERA);//结果回调onActivityResult code
+    }
+
+    /**
+     * 相册选择图片
+     * @param context
+     */
     private void setPhotoMetod(Context context) {
         int choice = 1;
         PictureSelector.create((Activity) context)
                 .openGallery(PictureConfig.TYPE_IMAGE)
                 .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
                 .imageSpanCount(4)// 每行显示个数 int
-                .maxSelectNum(choice)
+                .maxSelectNum(choice)//多选可以选择的图片数量
                 .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
                 .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
                 .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
@@ -249,51 +302,61 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .cropImageWideHigh(200, 200)//裁剪尺寸
                 .withAspectRatio(1, 1)//裁剪比例1：1是正方形
                 .freeStyleCropEnabled(true)//裁剪框是否可拖拽
-//                .bindCustomCameraInterfaceListener((context1, config, type) -> {//检测拍照按钮
-//                    ptype = "1";
-//                    Intent intent = new Intent(context1, PictureSelectorCameraEmptyActivity.class);
-//                    intent.putExtra(PictureConfig.CAMERA_FACING, PictureConfig.CAMERA_BEFORE);
-//                    startActivityForResult(intent, PictureConfig.REQUEST_CAMERA);
-//                })
 //               .isCameraRotateImage(true)// 拍照是否纠正旋转图片
 //                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-                .isCompress(true)// 是否压缩 true or false
+                .isCompress(false)// 是否压缩 true or false
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
 
-    String ptype = "";
+
     private List<String> photoPaths;
-    String androidToPath = "";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-//                case PictureConfig.REQUEST_CAMERA:
-//                    selectList = PictureSelector.obtainMultipleResult(data);
+                case PictureConfig.REQUEST_CAMERA:
+                    image_source = "1";
+                    List<LocalMedia> selectCamera = PictureSelector.obtainMultipleResult(data);
+                    addPhoto(selectCamera);
 //                    GlideUtils.loadImage(mActivity, maken_Img, selectList.get(0).getAndroidQToPath());
-//                    break;
+                    break;
                 case PictureConfig.CHOOSE_REQUEST:
-                    // 结果回调
-                    photoPaths = new ArrayList<>();
-                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
-                    if (!ListUtils.isEmpty(selectList)) {
-
-                        if (isQ()) {
-                            androidToPath = selectList.get(0).getAndroidQToPath();
-                        } else {
-                            androidToPath = selectList.get(0).getRealPath();
-                        }
-//                        GlideUtils.loadImage(mActivity, maken_Img, androidToPath);
-                        photoPaths.add(androidToPath);
-
-                        showCancelRoleDialog();
+                    image_source = "2";
+                    List<LocalMedia> selectChoose = PictureSelector.obtainMultipleResult(data);
+                    addPhoto(selectChoose);
+                    break;
+                case ScanCodeConfig.QUESTCODE:
+                    //接收扫码结果
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        String code = extras.getString(ScanCodeConfig.CODE_KEY);
+//                        tvCode.setText(String.format("%s%s", "结果： " , code));
+                        QRDetail_Activity.startActivity(mActivity, code);
                     }
                     break;
             }
+        }
+    }
+
+    /**
+     * 获取拍照与相册返回照片
+     */
+    private void addPhoto(List<LocalMedia> selectList) {
+        photoPaths = new ArrayList<>();
+        String androidToPath;
+        if (!ListUtils.isEmpty(selectList)) {
+            if (isQ()) {
+                androidToPath = selectList.get(0).getAndroidQToPath();
+            } else {
+                androidToPath = selectList.get(0).getRealPath();
+            }
+//          GlideUtils.loadImage(mActivity, imageView, androidToPath);
+            photoPaths.add(androidToPath);
+            showCancelRoleDialog();
         }
     }
 
@@ -325,6 +388,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             T.s("请选择图片", 3000);
             return;
         }
+        try {
+            if (getFileSize(photoPaths.get(0))) {
+                T.s("图片超过10M无法识别", 3000);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             if (!ListUtils.isEmpty(photoPaths)) {
                 //上传
@@ -361,6 +433,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             name = login_bean.getData().getName();
             dept_name = login_bean.getData().getDeptName();
         }
+        if (mapLocation != null){
+            province = mapLocation.getProvince();
+            city = mapLocation.getCity();
+            address = mapLocation.getAddress();
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("province", province);
         map.put("city", city);
@@ -370,15 +447,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         map.put("name", name);
         map.put("dept_name", dept_name);
         map.put("image", blobImgUrl);
-        map.put("image_source", "2");
+        map.put("image_source", image_source);
         map.put("scan_date", getTime());
+//        String toast = "code=" + code + "name=" + name + "dept_name=" + dept_name
+//                + "province=" + province + "city=" + city + "address=" + address
+//                + "ip=" + ip + "image=" + blobImgUrl + "image_source=" + image_source + "scan_date=" + getTime();
+//        T.s(toast, 5000);
+//        L.d("PG",toast);
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
                 Maken_Bean maken_bean = GsonUtil.getInstance().json2Bean(result, Maken_Bean.class);
                 if (maken_bean != null) {
                     String data = maken_bean.getData();
-                    MarkenCode_Activity.startActivity(context,data);
+                    MarkenCode_Activity.startActivity(context, data);
                 }
             }
 
@@ -387,18 +469,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             }
         });
-    }
-
-    private void getIP() {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);//获取系统的连接服务
-        NetworkInfo mActiveNetInfo = mConnectivityManager.getActiveNetworkInfo();//获取网络连接的信息
-        if (mActiveNetInfo == null) {
-            NetWorkUtils.myDialog(this);
-        } else {
-            String s = NetWorkUtils.setUpInfo(mActiveNetInfo, mConnectivityManager);
-            ip = s;
-            L.d("WIFI", s);
-        }
     }
 
 
@@ -416,7 +486,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LocationUtils.getInstance(this).removeLocationUpdatesListener();
+//        LocationUtils.getInstance(this).removeLocationUpdatesListener();
         mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
     }
 
@@ -439,11 +509,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public AMapLocationClientOption mLocationOption = null;
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
-    private AMapLocation MapLocation;
 
     private void Location() {
-
-//        updatePrivacyShow、updatePrivacyAgree
         try {
             //初始化定位
             mLocationClient = new AMapLocationClient(getApplicationContext());
@@ -468,27 +535,57 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    public AMapLocationListener mLocationListener = new AMapLocationListener() {
-        //声明定位回调监听器
-        @Override
-        public void onLocationChanged(AMapLocation aMapLocation) {
-            if (aMapLocation != null) {
-                if (aMapLocation.getErrorCode() == 0) {
-                    //可在其中解析amapLocation获取相应内容。
-                    MapLocation = aMapLocation;
-                    province = aMapLocation.getProvince();
-                    city = aMapLocation.getCity();
-                    address = aMapLocation.getAddress();
-                    L.d("PG", aMapLocation.getAddress());
-                } else {
-                    //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                    Log.e("AmapError", "location Error, ErrCode:"
-                            + aMapLocation.getErrorCode() + ", errInfo:"
-                            + aMapLocation.getErrorInfo());
-                }
+    private AMapLocation mapLocation;
+    //声明定位回调监听器
+    public AMapLocationListener mLocationListener = aMapLocation -> {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                //可在其中解析amapLocation获取相应内容。
+                mapLocation = aMapLocation;
+                province = aMapLocation.getProvince();
+                city = aMapLocation.getCity();
+                address = aMapLocation.getAddress();
+                L.d("PG", aMapLocation.getAddress());
+            } else {
+                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                Log.e("AmapError", "location Error, ErrCode:"
+                        + aMapLocation.getErrorCode() + ", errInfo:"
+                        + aMapLocation.getErrorInfo());
             }
         }
     };
+
+    // 上传图选择弹窗
+    private void showPhotoPopWindow() {
+        View anchorView = findViewById(R.id.photo_Tv);
+        TransformersTip photoPop = new TransformersTip(anchorView, R.layout.up_photo_tip) {
+            @Override
+            protected void initView(View contentView) {
+                TextView camera_Tv = contentView.findViewById(R.id.camera_Tv);
+                TextView photo_Tv = contentView.findViewById(R.id.photo_Tv);
+                TextView cancel_Tv = contentView.findViewById(R.id.cancel_Tv);
+                camera_Tv.setOnClickListener(v -> {
+                    setCameraMetod(mActivity);
+                    dismissTip();
+                });
+                photo_Tv.setOnClickListener(v -> {
+                    setPhotoMetod(mActivity);
+                    dismissTip();
+                });
+                cancel_Tv.setOnClickListener(v -> {
+                    dismissTip();
+                });
+
+            }
+        }
+                .setTipGravity(TipGravity.TO_BOTTOM_CENTER) // 设置浮窗相对于锚点控件展示的位置
+                .setTipOffsetXDp(0) // 设置浮窗在 x 轴的偏移量
+                .setTipOffsetYDp(6) // 设置浮窗在 y 轴的偏移量
+                .setBackgroundDimEnabled(true) // 设置是否允许浮窗的背景变暗
+                .setDismissOnTouchOutside(true) // 设置点击浮窗外部时是否自动关闭浮窗
+                .show(); // 显示浮窗
+    }
+
 
 
     private String getTime() {
@@ -497,6 +594,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Date curDate = new Date(System.currentTimeMillis());
         rel = formatter.format(curDate);
         return rel;
+    }
+
+    private void getIP() {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);//获取系统的连接服务
+        NetworkInfo mActiveNetInfo = mConnectivityManager.getActiveNetworkInfo();//获取网络连接的信息
+        if (mActiveNetInfo == null) {
+            NetWorkUtils.myDialog(this);
+        } else {
+            String s = NetWorkUtils.setUpInfo(mActiveNetInfo, mConnectivityManager);
+            ip = s;
+            L.d("WIFI", s);
+        }
+    }
+
+    /**
+     * 判断文件是否大于10M
+     *
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    public static boolean getFileSize(String fileName) throws Exception {
+        File file = new File(fileName);
+        long cacheSize = 0;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            if (file.exists()) {
+                FileInputStream fis = new FileInputStream(file);
+                cacheSize = fis.available();
+            }
+
+        }
+        long fileM = cacheSize / 1024 / 1024;
+        if (fileM > 10) {
+            return true;
+        }
+        return false;
     }
 
 

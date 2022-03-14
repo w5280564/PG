@@ -3,7 +3,6 @@ package com.example.pg.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
-import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -19,7 +18,7 @@ import com.example.pg.bean.Login_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.L;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.tencent.mmkv.MMKV;
 
 import java.util.HashMap;

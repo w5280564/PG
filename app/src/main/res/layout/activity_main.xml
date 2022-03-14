@@ -10,7 +10,6 @@
 
 
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="123dp"
@@ -133,6 +132,12 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/photo_Tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

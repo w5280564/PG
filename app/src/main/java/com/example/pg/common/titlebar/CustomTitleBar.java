@@ -56,7 +56,7 @@ public class CustomTitleBar extends FrameLayout implements OnClickListener {
     // 标题内容
     private String title;
     // 标题文字大小
-    private int titleSize = 17;
+    private int titleSize = 14;
     // 标题文字颜色
     private int titleColor;
 

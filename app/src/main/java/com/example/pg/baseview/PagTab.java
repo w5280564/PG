@@ -27,18 +27,21 @@ import java.util.List;
 
 public class PagTab extends FrameLayout implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private LinearLayout mControllerView;
-    private TextView mLastBtn;
+    private TextView mBackBtn;
     private TextView mNextBtn;
-//    private Spinner mPerPageCountSpinner;
+    private TextView first_btn;
+    private TextView last_btn;
+    //    private Spinner mPerPageCountSpinner;
     private ArrayAdapter<String> mPerPageCountAdapter;
 
     private OnChangedListener mListener;
+    private FirstAndLastListener FirstAndLastListener;
 
     private int[] mPerPageCountChoices = {10, 20, 30, 50};
-    private int mCurrentPagePos = 1;
+    private int mCurrentPagePos = 1; //当前选中页码
     private int mLastPagePos = 0;
-    private int mTotalPageCount;
-    private int mTotalCount;
+    private int mTotalPageCount;//一共多少页
+    private int mTotalCount;//一共多少条数据
     private int mPerPageCount = 10;
     private int mNumberTipShowCount = 5;  // 奇数: 数字指示器的数量
 
@@ -67,8 +70,16 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
         initSpinner();
     }
 
+    public void setmPerPageCount(int mPerPageCount){
+        this.mPerPageCount = mPerPageCount;
+    }
+
     public void setmListener(OnChangedListener mListener) {
         this.mListener = mListener;
+    }
+
+    public void setFirstAndLastListener(FirstAndLastListener fAndL) {
+        this.FirstAndLastListener = fAndL;
     }
 
     public PagTab(Context context) {
@@ -98,14 +109,18 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
 
     private void init() {
         mControllerView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.pagination_indicator, null);
-        mLastBtn = mControllerView.findViewById(R.id.last_btn);
+        mBackBtn = mControllerView.findViewById(R.id.back_btn);
         mNextBtn = mControllerView.findViewById(R.id.next_btn);
+        first_btn = mControllerView.findViewById(R.id.first_btn);
+        last_btn = mControllerView.findViewById(R.id.last_btn);
         mNumberLlt = mControllerView.findViewById(R.id.number_llt);
         mTotalTv = mControllerView.findViewById(R.id.total_tv);
 //        mPerPageCountSpinner = mControllerView.findViewById(R.id.per_page_count_spinner);
 
-        mLastBtn.setOnClickListener(this);
+        mBackBtn.setOnClickListener(this);
         mNextBtn.setOnClickListener(this);
+        first_btn.setOnClickListener(new firstClick());
+        last_btn.setOnClickListener(new lastClick());
         initSpinner();
 
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -146,19 +161,29 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
 
 //        mPerPageCountSpinner.setBackgroundDrawable(mSpinnerDrawable);
         mTotalTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, sTextSize);
-        mLastBtn.setText("<");
+        mBackBtn.setText("<");
         mNextBtn.setText(">");
-        mLastBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX, sTextSize);
+        mBackBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX, sTextSize);
         mNextBtn.setTextSize(TypedValue.COMPLEX_UNIT_PX, sTextSize);
-        mLastBtn.getLayoutParams().width = sWidth;
-        mLastBtn.getLayoutParams().height = sWidth;
+        mBackBtn.getLayoutParams().width = sWidth;
+        mBackBtn.getLayoutParams().height = sWidth;
         mNextBtn.getLayoutParams().width = sWidth;
         mNextBtn.getLayoutParams().height = sWidth;
 //        mPerPageCountSpinner.getLayoutParams().height = sWidth;
 
-        mLastBtn.setBackgroundDrawable(enableSelectorDrawable1);
-        mNextBtn.setBackgroundDrawable(enableSelectorDrawable2);
+        first_btn.setTextColor(sColor_selected);
+        first_btn.getLayoutParams().width = sWidth;
+        first_btn.getLayoutParams().height = sWidth;
+        first_btn.setBackgroundDrawable(enableSelectorDrawable1);
 
+        last_btn.getLayoutParams().width = sWidth;
+        last_btn.getLayoutParams().height = sWidth;
+        last_btn.setBackgroundDrawable(enableSelectorDrawable1);
+        last_btn.setTextColor(sColor_unselected);
+        last_btn.setBackgroundResource(R.drawable.shape_round_rect_unselected);
+
+        mBackBtn.setBackgroundDrawable(enableSelectorDrawable1);
+        mNextBtn.setBackgroundDrawable(enableSelectorDrawable2);
     }
 
     private void initSpinner() {
@@ -181,6 +206,12 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
         notifyChange();
     }
 
+    public void setPerPageCount(int mPerPageCount) {
+        this.mPerPageCount = mPerPageCount;
+        notifyChange();
+    }
+
+
     private void notifyChange() {
         initIndicator();
         updateNumberLlt();
@@ -191,15 +222,17 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
         mLastPagePos = 0;
         if (mTotalCount == 0) {
             mTotalPageCount = 0;
-            mLastBtn.setEnabled(false);
-            mLastBtn.setTextColor(sColor_unselected);
+            mBackBtn.setEnabled(false);
+            mBackBtn.setTextColor(sColor_unselected);
             mNextBtn.setEnabled(false);
             mNextBtn.setTextColor(sColor_unselected);
+
             return;
         } else {
             mTotalPageCount = mTotalCount % mPerPageCount > 0 ? mTotalCount / mPerPageCount + 1 : mTotalCount / mPerPageCount;
-            mLastBtn.setEnabled(false);
-            mLastBtn.setTextColor(sColor_unselected);
+            last_btn.setText(mTotalPageCount + "");
+            mBackBtn.setEnabled(false);
+            mBackBtn.setTextColor(sColor_unselected);
             if (mTotalPageCount == 1) {
                 mNextBtn.setEnabled(false);
                 mNextBtn.setTextColor(sColor_unselected);
@@ -216,21 +249,61 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
 
     }
 
-    public void next() {
-        int lastPos = mCurrentPagePos;
-        if (mCurrentPagePos == mTotalPageCount)
-            return;
-        mCurrentPagePos++;
-        updateState(lastPos);
+
+    private void setBtnColor() {
+        first_btn.setTextColor(sColor_unselected);
+        first_btn.setSelected(false);
+        first_btn.setBackgroundResource(R.drawable.shape_round_rect_unselected);
+        last_btn.setTextColor(sColor_unselected);
+        last_btn.setSelected(false);
+        last_btn.setBackgroundResource(R.drawable.shape_round_rect_unselected);
     }
 
-    public void last() {
+    /**
+     * 选中第一个
+     */
+    public class firstClick implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            setBtnColor();
+            first_btn.setTextColor(sColor_selected);
+            first_btn.setBackgroundResource(R.drawable.shape_round_rect_selected);
+            FirstAndLastListener.OnFirstClick(1);
+            mCurrentPagePos = 2;
+            firstPage(mCurrentPagePos);
+        }
+    }
+
+    /**
+     * 选中最后一个
+     */
+    public class lastClick implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            setBtnColor();
+            last_btn.setTextColor(sColor_selected);
+            last_btn.setBackgroundResource(R.drawable.shape_round_rect_selected);
+            int lastPos = mTotalPageCount;
+            FirstAndLastListener.OnLastClick(lastPos);
+            lastPage(lastPos);
+        }
+    }
+
+
+    public void lastPage(int page) {
+        mCurrentPagePos = mTotalPageCount;
+        updateState(mTotalPageCount);
+    }
+
+    public void firstPage(int page) {
         int lastPos = mCurrentPagePos;
         if (mCurrentPagePos == 1)
             return;
         mCurrentPagePos--;
         updateState(lastPos);
     }
+
+
 
     private void updateState(int lastPos) {
         if (mCurrentPagePos == mTotalPageCount) {
@@ -241,11 +314,11 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
             mNextBtn.setTextColor(sColor_selected);
         }
         if (mCurrentPagePos == 1) {
-            mLastBtn.setEnabled(false);
-            mLastBtn.setTextColor(sColor_unselected);
+            mBackBtn.setEnabled(false);
+            mBackBtn.setTextColor(sColor_unselected);
         } else {
-            mLastBtn.setEnabled(true);
-            mLastBtn.setTextColor(sColor_selected);
+            mBackBtn.setEnabled(true);
+            mBackBtn.setTextColor(sColor_selected);
         }
 
         if (mListener != null) {
@@ -263,21 +336,46 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
         if (mTotalPageCount > mNumberTipShowCount) {
             int start, end;
             int half = mNumberTipShowCount / 2;
+
+//            start = mCurrentPagePos - half;
+//            end = mCurrentPagePos + half;
+//            if (start <= 0) {
+//                // 越过"数字1"的位置了  把超出部分补偿给end
+//                end = end + Math.abs(start) + 1;
+//                start = 1;
+//            } else if (end > mTotalPageCount) {
+//                // 越过"总页数数字"的位置了  把超出部分补偿给start
+//                start = start - Math.abs(mTotalPageCount - end);
+//                end = mTotalPageCount;
+//            }
+
             start = mCurrentPagePos - half;
             end = mCurrentPagePos + half;
             if (start <= 0) {
                 // 越过"数字1"的位置了  把超出部分补偿给end
-                end = end + Math.abs(start) + 1;
-                start = 1;
-            } else if (end > mTotalPageCount) {
-                // 越过"总页数数字"的位置了  把超出部分补偿给start
-                start = start - Math.abs(mTotalPageCount - end);
-                end = mTotalPageCount;
+                end = end + Math.abs(start) + 1 + 1;
+                start = 2;
             }
+            else if (start == 1) {
+                start = 2;
+//                end = 8;
+                end = mCurrentPagePos + half;
+            }
+            else if (end >= mTotalPageCount) {
+                // 越过"总页数数字"的位置了  把超出部分补偿给start
+                start = start - Math.abs(mTotalPageCount - end) - 1;
+                end = mTotalPageCount - 1;
+            }
+
+
             updateNumberText(start, end);
+            first_btn.setVisibility(VISIBLE);
+            last_btn.setVisibility(VISIBLE);
         } else {
             // 总页数小于数字指示器数量，则直接以总页数的大小来刷新
             updateNumberText(1, mNumberTipTextViewArray.length);
+            first_btn.setVisibility(GONE);
+            last_btn.setVisibility(GONE);
         }
     }
 
@@ -325,6 +423,7 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
 
     @Override
     public void onClick(View v) {
+        setBtnColor();
         int lastPos = mCurrentPagePos;
 
         if (v.getId() == R.id.next_btn) {
@@ -332,7 +431,7 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
                 return;
             mLastPagePos = mCurrentPagePos;
             mCurrentPagePos++;
-        } else if (v.getId() == R.id.last_btn) {
+        } else if (v.getId() == R.id.back_btn) {
             if (mCurrentPagePos == 1)  // 已经是第一页了
                 return;
             mLastPagePos = mCurrentPagePos;
@@ -367,6 +466,12 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
         mLastPagePos = mCurrentPagePos;
         mCurrentPagePos = position;
         updateState(mLastPagePos);
+    }
+
+    public interface FirstAndLastListener {
+        void OnFirstClick(int currentPapePos);
+
+        void OnLastClick(int currentPapePos);
     }
 
 
@@ -471,4 +576,6 @@ public class PagTab extends FrameLayout implements View.OnClickListener, Adapter
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
+
+
 }

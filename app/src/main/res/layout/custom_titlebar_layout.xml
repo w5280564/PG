@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_title_bar"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
+    android:layout_height="30dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -46,7 +46,7 @@
                 android:singleLine="true"
                 android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </RelativeLayout>
         <!-- 中间文字结束 -->
 

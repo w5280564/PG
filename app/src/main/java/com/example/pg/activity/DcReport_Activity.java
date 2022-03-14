@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 
 
 /**

@@ -85,7 +85,7 @@ public class QRDetail_Receipt_Fragment extends BaseLazyFragment {
                     originalValue(transport_bean.getData().getShiptoCode(), "暂无数据", "", shiptoCode_MyView.getTvContent());
                     originalValue(transport_bean.getData().getShiptoName(), "暂无数据", "", shiptoName_MyView.getTvContent());
                     originalValue(transport_bean.getData().getShipmentOrderStatus(), "暂无数据", "", state_MyView.getTvContent());
-                    originalValue(transport_bean.getData().getSendTime(), "暂无数据", "", sendTime_MyView.getTvContent());
+                    originalValue(transport_bean.getData().getShipmentReceivedTime(), "暂无数据", "", sendTime_MyView.getTvContent());
                 }
             }
 

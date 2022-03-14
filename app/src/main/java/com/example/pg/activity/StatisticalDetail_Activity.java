@@ -4,7 +4,6 @@ package com.example.pg.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,13 +13,11 @@ import com.example.pg.R;
 import com.example.pg.adapter.Statistical_item_Adapter;
 import com.example.pg.baseview.BaseRecyclerViewSplitActivity;
 import com.example.pg.baseview.PagTab;
-import com.example.pg.baseview.PageControl;
 import com.example.pg.bean.Statistical_Bean;
 import com.example.pg.bean.Statistical_List_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.barlibrary.ImmersionBar;
-import com.lwy.paginationlib.PaginationIndicator;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,19 +65,8 @@ public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
     @Override
     protected void initView() {
         pagTab = findViewById(R.id.pagTab);
-        pagTab.setmListener(new PagTab.OnChangedListener() {
-            @Override
-            public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
-//                Toast.makeText(StatisticalDetail_Activity.this, "选中" + currentPapePos + "页", Toast.LENGTH_LONG).show();
-                page = currentPapePos;
-                postOther(mActivity, xUtils3Http.BASE_URL + xUtils3Http.Dcreport);
-            }
-
-            @Override
-            public void onPerPageCountChanged(int perPageCount) {
-                // x条/页 选项改变时触发
-            }
-        });
+        pagTab.setmListener(new pagTabOnChange());
+        pagTab.setFirstAndLastListener(new fAndLClick());
 
         mRecyclerView = findViewById(R.id.mRecyclerView);
 //        mSwipeRefreshLayout = findViewById(R.id.refresh_layout);
@@ -135,21 +121,15 @@ public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-//                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
-//                    mSwipeRefreshLayout.setRefreshing(false);
-//                }
+
                 String data = GsonUtil.getInstance().getValue(result, "data");
                 Statistical_List_Bean statisticalListBean = GsonUtil.getInstance().json2Bean(data, Statistical_List_Bean.class);
                 if (statisticalListBean != null) {
-//                    handleSplitListData(statisticalListBean, mAdapter, limit);
-//                    Integer totalElements = statisticalListBean.getTotalElements();
-////                    indicator.setTotalCount(totalElements);  // 设置数据源总数量即可
-//                    int i = Integer.parseInt(statisticalListBean.getTotalPages());
-//                    pagTab.setTotalCount(i);
 
                     mAdapter.setNewData(statisticalListBean.getContent());
                     Integer totalElements = Integer.valueOf(statisticalListBean.getTotalElements());
                     pagTab.setTotalCount(totalElements);
+//                    pagTab.setTotalCount(105);
                 }
             }
 
@@ -167,9 +147,6 @@ public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
         xUtils3Http.post(context, baseUrl, map, new xUtils3Http.GetDataCallback() {
             @Override
             public void success(String result) {
-//                if (page == 1 && mSwipeRefreshLayout.isRefreshing()) {
-//                    mSwipeRefreshLayout.setRefreshing(false);
-//                }
                 String data = GsonUtil.getInstance().getValue(result, "data");
                 Statistical_List_Bean statisticalListBean = GsonUtil.getInstance().json2Bean(data, Statistical_List_Bean.class);
                 if (statisticalListBean != null) {
@@ -186,4 +163,37 @@ public class StatisticalDetail_Activity extends BaseRecyclerViewSplitActivity {
     }
 
 
+    /**
+     * 分页选择器中间选中
+     */
+    private class pagTabOnChange implements PagTab.OnChangedListener {
+        @Override
+        public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
+//                Toast.makeText(StatisticalDetail_Activity.this, "选中" + currentPapePos + "页", Toast.LENGTH_LONG).show();
+            page = currentPapePos;
+            postOther(mActivity, xUtils3Http.BASE_URL + xUtils3Http.Dcreport);
+        }
+
+        @Override
+        public void onPerPageCountChanged(int perPageCount) {
+            // x条/页 选项改变时触发
+        }
+    }
+
+    /**
+     * 选择器第一页最后一页
+     */
+    private class fAndLClick implements PagTab.FirstAndLastListener {
+        @Override
+        public void OnFirstClick(int currentPapePos) {
+            page = currentPapePos;
+            postOther(mActivity, xUtils3Http.BASE_URL + xUtils3Http.Dcreport);
+        }
+
+        @Override
+        public void OnLastClick(int currentPapePos) {
+            page = currentPapePos;
+            postOther(mActivity, xUtils3Http.BASE_URL + xUtils3Http.Dcreport);
+        }
+    }
 }

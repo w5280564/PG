@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -20,13 +19,13 @@ import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
-
-import com.example.pg.activity.MainActivity;
 import com.example.pg.R;
+import com.example.pg.activity.MainActivity;
 import com.example.pg.common.titlebar.CustomTitleBar;
 import com.example.pg.common.utils.StringUtil;
 import com.example.pg.common.utils.T;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
+
 
 import java.util.HashMap;
 import java.util.Iterator;

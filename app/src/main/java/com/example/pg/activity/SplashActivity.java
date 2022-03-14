@@ -6,7 +6,7 @@ import android.webkit.WebView;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.baseview.WebViewPools;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,6 +46,7 @@ public class SplashActivity extends BaseActivity {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
+//                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 SplashActivity.this.finish();

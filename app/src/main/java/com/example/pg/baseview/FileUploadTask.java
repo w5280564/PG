@@ -13,6 +13,8 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FileUploadTask extends AsyncTask<Void, Void, String> {
     //容器名称
@@ -61,7 +63,9 @@ public class FileUploadTask extends AsyncTask<Void, Void, String> {
             container.createIfNotExists();
 
 //            String blobName = System.currentTimeMillis() + ".txt";
-            String blobName = System.currentTimeMillis() + ".jpg";
+            long time = System.currentTimeMillis();
+            String timeName = getTime(time);
+            String blobName = timeName + "/" + System.currentTimeMillis() + ".jpg";
             CloudBlockBlob blockBlob = container.getBlockBlobReference(blobName);
             blockBlob.upload(new FileInputStream(mUploadFile), mUploadFile.length());
             status = blockBlob.getUri().toString();
@@ -94,5 +98,13 @@ public class FileUploadTask extends AsyncTask<Void, Void, String> {
         void success(String result);
 
         void failed(String... args);
+    }
+
+    private String getTime(long time) {
+        String rel = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date curDate = new Date(System.currentTimeMillis());
+        rel = formatter.format(curDate);
+        return rel;
     }
 }

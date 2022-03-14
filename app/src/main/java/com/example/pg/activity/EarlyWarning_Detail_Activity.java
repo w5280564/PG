@@ -3,35 +3,16 @@ package com.example.pg.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
-import android.text.TextUtils;
-import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.pg.R;
 import com.example.pg.adapter.EarlyWarning_item_Adapter;
-import com.example.pg.adapter.MyAcfAdapter;
 import com.example.pg.baseview.BaseActivity;
-import com.example.pg.bean.CustomerAlarm_Bean;
-import com.example.pg.bean.CustomerName_Bean;
 import com.example.pg.bean.EarlyWarning_Detail_Bean;
-import com.example.pg.common.utils.GsonUtil;
-import com.example.pg.common.utils.ListUtils;
-import com.example.pg.common.utils.T;
-import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.barlibrary.ImmersionBar;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.gyf.immersionbar.ImmersionBar;
 
 
 /**

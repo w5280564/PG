@@ -8,23 +8,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.pg.R;
-import com.example.pg.common.utils.StringUtil;
-import com.example.pg.common.utils.T;
-import com.gyf.barlibrary.SimpleImmersionFragment;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-
-
-public abstract class BaseFragment extends SimpleImmersionFragment {
+public abstract class BaseFragment extends Fragment {
     protected MyApplication mApplication;
     protected Context mContext;
     protected BaseActivity mActivity;
@@ -186,10 +175,10 @@ public abstract class BaseFragment extends SimpleImmersionFragment {
 
 
 
-    @Override
-    public void initImmersionBar() {
-
-    }
+//    @Override
+//    public void initImmersionBar() {
+//
+//    }
 
 
 

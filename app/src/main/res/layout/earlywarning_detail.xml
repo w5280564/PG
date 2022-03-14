@@ -10,7 +10,7 @@
     <com.example.pg.common.titlebar.CustomTitleBar
         android:id="@+id/title_bar"
         android:layout_width="wrap_content"
-        android:layout_height="45dp"
+        android:layout_height="30dp"
         app:layout_constraintTop_toTopOf="parent"
         app:titleBarBackgroundColor="@color/app_main_color"
         app:titleBarLeftImg="@mipmap/icon_back"
@@ -137,7 +137,7 @@
         android:layout_height="35dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:maxLines="1"
+        android:maxLines="2"
         android:paddingStart="10dp"
         android:text=""
         android:textColor="@color/text_color_a1a1a1"

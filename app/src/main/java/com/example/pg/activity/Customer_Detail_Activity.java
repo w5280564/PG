@@ -3,21 +3,18 @@ package com.example.pg.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pg.R;
 import com.example.pg.adapter.Customer_item_Adapter;
-import com.example.pg.adapter.Statistical_item_Adapter;
 import com.example.pg.baseview.BaseRecyclerViewSplitActivity;
 import com.example.pg.baseview.PagTab;
 import com.example.pg.bean.Statistical_List_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,19 +63,10 @@ public class Customer_Detail_Activity extends BaseRecyclerViewSplitActivity {
     @Override
     protected void initView() {
         pagTab = findViewById(R.id.pagTab);
-        pagTab.setmListener(new PagTab.OnChangedListener() {
-            @Override
-            public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
-//                Toast.makeText(Customer_Detail_Activity.this, "选中" + currentPapePos + "页", Toast.LENGTH_LONG).show();
-                page = currentPapePos;
-                postOther(mActivity, xUtils3Http.BASE_URL+xUtils3Http.Customer_Scan);
-            }
+        pagTab.setmListener(new pagTabOnChange());
+        pagTab.setFirstAndLastListener(new fAndLClick());
 
-            @Override
-            public void onPerPageCountChanged(int perPageCount) {
-                // x条/页 选项改变时触发
-            }
-        });
+
 
         mRecyclerView = findViewById(R.id.mRecyclerView);
         initRecyclerView();
@@ -163,7 +151,38 @@ public class Customer_Detail_Activity extends BaseRecyclerViewSplitActivity {
         });
     }
 
+    /**
+     * 分页选择器中间选中
+     */
+    private class pagTabOnChange implements PagTab.OnChangedListener {
+        @Override
+        public void onPageSelectedChanged(int currentPapePos, int lastPagePos, int totalPageCount, int total) {
+            page = currentPapePos;
+            postOther(mActivity, xUtils3Http.BASE_URL+xUtils3Http.Customer_Scan);
+        }
 
+        @Override
+        public void onPerPageCountChanged(int perPageCount) {
+            // x条/页 选项改变时触发
+        }
+    }
+
+    /**
+     * 选择器第一页最后一页
+     */
+    private class fAndLClick implements PagTab.FirstAndLastListener {
+        @Override
+        public void OnFirstClick(int currentPapePos) {
+            page = currentPapePos;
+            postOther(mActivity, xUtils3Http.BASE_URL+xUtils3Http.Customer_Scan);
+        }
+
+        @Override
+        public void OnLastClick(int currentPapePos) {
+            page = currentPapePos;
+            postOther(mActivity, xUtils3Http.BASE_URL+xUtils3Http.Customer_Scan);
+        }
+    }
 
 
 }

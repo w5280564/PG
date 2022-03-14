@@ -6,7 +6,8 @@
     android:layout_height="match_parent">
 
 
-    <cn.bingoogolapple.qrcode.zxing.ZXingView
+<!--    <cn.bingoogolapple.qrcode.zxing.ZXingView-->
+    <cn.bingoogolapple.qrcode.zbar.ZBarView
         android:id="@+id/zxingview"
         style="@style/MatchMatch"
         app:qrcv_animTime="1000"

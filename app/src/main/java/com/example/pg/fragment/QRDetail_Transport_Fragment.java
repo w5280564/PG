@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseLazyFragment;
 import com.example.pg.baseview.MyArrowItemView;
-import com.example.pg.bean.Production_Bean;
 import com.example.pg.bean.Transport_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.xUtils3Http;

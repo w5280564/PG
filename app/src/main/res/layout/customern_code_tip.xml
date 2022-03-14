@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.bingoogolapple.transformerstip.view.TransformersTipLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal"
+    app:ad_arrowExtraOffsetX="0dp"
+    app:ad_arrowExtraOffsetY="0dp"
+    app:ad_arrowGravity="to_top_center"
+    app:ad_arrowHeight="6dp"
+    app:ad_bgColor="@android:color/white"
+    app:ad_radius="4dp"
+    app:ad_shadowColor="#33000000"
+    app:ad_shadowSize="6dp">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tip_Recycler"
+        android:layout_width="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_height="wrap_content"/>
+
+
+</cn.bingoogolapple.transformerstip.view.TransformersTipLinearLayout>

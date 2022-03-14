@@ -33,4 +33,7 @@
     <!--其他颜色 -->
     <color name="text_other_color">#666666</color>
     <color name="text_color_EFEFEF">#EFEFEF</color>
+    <color name="text_color_858C92">#858c92</color>
+    <color name="text_color_F0F6FC">#f0f6fc</color>
+    <color name="text_color_03366B">#03366b</color>
 </resources>

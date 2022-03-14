@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.bingoogolapple.transformerstip.view.TransformersTipLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:ad_arrowExtraOffsetX="0dp"
+    app:ad_arrowExtraOffsetY="0dp"
+    app:ad_arrowGravity="to_bottom_center"
+    app:ad_arrowHeight="6dp"
+    app:ad_bgColor="@android:color/white"
+    app:ad_radius="4dp"
+    app:ad_shadowColor="#33000000"
+    app:ad_shadowSize="6dp">
+
+    <TextView
+        android:id="@+id/camera_Tv"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="相机"
+        android:textColor="@color/app_main_color"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/text_color_EFEFEF"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    <TextView
+        android:id="@+id/photo_Tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="去相册选择"
+        android:textColor="@color/app_main_color"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/text_color_EFEFEF"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/cancel_Tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/app_main_color"
+        android:textSize="14sp" />
+
+
+</cn.bingoogolapple.transformerstip.view.TransformersTipLinearLayout>
