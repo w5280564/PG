@@ -47,6 +47,7 @@ import com.tencent.mmkv.MMKV;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -619,7 +620,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     public static boolean getFileSize(String fileName) throws Exception {
         File file = new File(fileName);
-        long cacheSize = 0;
+        double cacheSize = 0;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             if (file.exists()) {
                 FileInputStream fis = new FileInputStream(file);
@@ -627,7 +628,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
         }
-        long fileM = cacheSize / 1024 / 1024;//计算多少M
+        double fileM = cacheSize / 1024 / 1024;//计算多少M
         if (fileM > 10) {
             return true;
         }

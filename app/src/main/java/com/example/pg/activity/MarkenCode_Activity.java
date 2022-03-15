@@ -63,7 +63,7 @@ public class MarkenCode_Activity extends BaseActivity {
             maken_Tv.setText("初步判断为假货");
         }else if (TextUtils.equals(makenStr,"1")){
             maken_Tv.setText("初步判断为正品");
-        }else if (TextUtils.equals(makenStr,"2")){
+        }else if (TextUtils.equals(makenStr,"2") || TextUtils.equals(makenStr,"3")){
             maken_Tv.setText("识别失败，请重新拍照");
         }
     }
