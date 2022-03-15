@@ -18,7 +18,7 @@ import com.example.pg.bean.Login_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.L;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 import com.tencent.mmkv.MMKV;
 
 import java.util.HashMap;

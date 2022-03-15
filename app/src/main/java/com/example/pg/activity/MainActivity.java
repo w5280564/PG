@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -13,15 +12,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -31,7 +29,6 @@ import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.baseview.FileUploadTask;
 import com.example.pg.baseview.GlideEnGine;
-import com.example.pg.baseview.GlideUtils;
 import com.example.pg.baseview.LocationUtils;
 import com.example.pg.baseview.NetWorkUtils;
 import com.example.pg.baseview.TwoButtonDialogBlue;
@@ -42,25 +39,19 @@ import com.example.pg.common.utils.L;
 import com.example.pg.common.utils.ListUtils;
 import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.tencent.mmkv.MMKV;
-import com.yxing.ScanCodeActivity;
-import com.yxing.ScanCodeConfig;
-import com.yxing.def.ScanStyle;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import cn.bingoogolapple.transformerstip.TransformersTip;
@@ -223,15 +214,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * YXing 二维码扫描
+     */
     private void startQRScan() {
-        ScanCodeConfig.create(mActivity)
-                //设置扫码页样式 ScanStyle.NONE：无  ScanStyle.QQ ：仿QQ样式   ScanStyle.WECHAT ：仿微信样式    ScanStyle.CUSTOMIZE ： 自定义样式
-                .setStyle(ScanStyle.QQ)
-                //扫码成功是否播放音效  true ： 播放   false ： 不播放
-                .setPlayAudio(false)
-                .buidler()
-                //跳转扫码页   扫码页可自定义样式
-                .start(ScanCodeActivity.class);
+//        ScanCodeConfig.create(mActivity)
+//                //设置扫码页样式 ScanStyle.NONE：无  ScanStyle.QQ ：仿QQ样式   ScanStyle.WECHAT ：仿微信样式    ScanStyle.CUSTOMIZE ： 自定义样式
+//                .setStyle(ScanStyle.QQ)
+//                //扫码成功是否播放音效  true ： 播放   false ： 不播放
+//                .setPlayAudio(false)
+//                .buidler()
+//                //跳转扫码页   扫码页可自定义样式
+//                .start(ScanCodeActivity.class);
     }
 
     /**
@@ -261,6 +255,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 拍照
+     *
      * @param context
      */
     private void setCameraMetod(Context context) {
@@ -274,8 +269,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .isPreviewImage(true)// 是否可预览图片 true or false
                 .isCamera(false)// 是否显示拍照按钮 true or false
                 .isEnableCrop(true)//开启裁剪
-                .cropImageWideHigh(200, 200)//裁剪尺寸
-                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+                .cutOutQuality(100)//裁剪输出质量
+//                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例-尺寸 就是原图大小的选择框不会压缩
+//                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
                 .freeStyleCropEnabled(true)//裁剪框是否可拖拽
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 .isCompress(false)// 是否压缩 true or false
@@ -284,6 +280,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 相册选择图片
+     *
      * @param context
      */
     private void setPhotoMetod(Context context) {
@@ -299,8 +296,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .isPreviewImage(true)// 是否可预览图片 true or false
                 .isCamera(true)// 是否显示拍照按钮 true or false
                 .isEnableCrop(true)//开启裁剪
-                .cropImageWideHigh(200, 200)//裁剪尺寸
-                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+                .cutOutQuality(100)//裁剪输出质量
+//                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例 尺寸 就是原图大小的选择框不会压缩
+//                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
                 .freeStyleCropEnabled(true)//裁剪框是否可拖拽
 //               .isCameraRotateImage(true)// 拍照是否纠正旋转图片
 //                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
@@ -308,7 +306,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .isCompress(false)// 是否压缩 true or false
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
-
 
 
     private List<String> photoPaths;
@@ -329,15 +326,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     List<LocalMedia> selectChoose = PictureSelector.obtainMultipleResult(data);
                     addPhoto(selectChoose);
                     break;
-                case ScanCodeConfig.QUESTCODE:
-                    //接收扫码结果
-                    Bundle extras = data.getExtras();
-                    if (extras != null) {
-                        String code = extras.getString(ScanCodeConfig.CODE_KEY);
-//                        tvCode.setText(String.format("%s%s", "结果： " , code));
-                        QRDetail_Activity.startActivity(mActivity, code);
-                    }
-                    break;
+//                case ScanCodeConfig.QUESTCODE:
+//                    //接收扫码结果
+//                    Bundle extras = data.getExtras();
+//                    if (extras != null) {
+//                        String code = extras.getString(ScanCodeConfig.CODE_KEY);
+////                        tvCode.setText(String.format("%s%s", "结果： " , code));
+//                        QRDetail_Activity.startActivity(mActivity, code);
+//                    }
+//                    break;
             }
         }
     }
@@ -347,14 +344,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void addPhoto(List<LocalMedia> selectList) {
         photoPaths = new ArrayList<>();
-        String androidToPath;
+        String androidToPath = "";
         if (!ListUtils.isEmpty(selectList)) {
-            if (isQ()) {
-                androidToPath = selectList.get(0).getAndroidQToPath();
-            } else {
-                androidToPath = selectList.get(0).getRealPath();
+            LocalMedia localMedia = selectList.get(0);
+            if (localMedia.isCut()) { // 用裁剪过的路径
+                androidToPath = localMedia.getCutPath();
             }
-//          GlideUtils.loadImage(mActivity, imageView, androidToPath);
+            if (TextUtils.isEmpty(androidToPath)) {
+                if (isQ()) {
+                    androidToPath = selectList.get(0).getAndroidQToPath();
+                } else {
+                    androidToPath = selectList.get(0).getRealPath();
+                }
+            }
+
+//            GlideUtils.loadImage(mActivity, imageView, androidToPath);
             photoPaths.add(androidToPath);
             showCancelRoleDialog();
         }
@@ -405,7 +409,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void success(String result) {
 //                        getInfo(result);
-
                         postMaken(mActivity, xUtils3Http.QA_Marken_URL, result);
                     }
 
@@ -433,7 +436,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             name = login_bean.getData().getName();
             dept_name = login_bean.getData().getDeptName();
         }
-        if (mapLocation != null){
+        if (mapLocation != null) {
             province = mapLocation.getProvince();
             city = mapLocation.getCity();
             address = mapLocation.getAddress();
@@ -587,7 +590,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     private String getTime() {
         String rel = "";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -621,11 +623,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             if (file.exists()) {
                 FileInputStream fis = new FileInputStream(file);
-                cacheSize = fis.available();
+                cacheSize = fis.available();//获取字节
             }
 
         }
-        long fileM = cacheSize / 1024 / 1024;
+        long fileM = cacheSize / 1024 / 1024;//计算多少M
         if (fileM > 10) {
             return true;
         }

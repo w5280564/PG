@@ -84,24 +84,24 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     api 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.contrarywind:Android-PickerView:4.1.9'//弹窗选择器
+//    implementation 'com.contrarywind:Android-PickerView:4.1.9'//弹窗选择器
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc02'//图片选择器
     api 'com.microsoft.azure.android:azure-storage-android:2.0.0@aar' //blob上传图片
     implementation 'com.amap.api:location:5.3.0'
-    implementation 'com.github.itlwy:PaginationExample:0.0.20'
+//    implementation 'com.github.itlwy:PaginationExample:0.0.20' //仿网页分页
 
     //沉浸式状态栏
     api 'com.gyf.immersionbar:immersionbar:2.3.3'
 
-    implementation 'com.github.amggg:YXing:V1.1.2'
-    // CameraX 使用YXing 报错加入这个包
-    def camerax_version = '1.1.0-alpha04'
-    implementation "androidx.camera:camera-camera2:$camerax_version"
-    implementation "androidx.camera:camera-lifecycle:$camerax_version"
-    implementation "androidx.camera:camera-view:1.0.0-alpha20"
+//    implementation 'com.github.amggg:YXing:V1.1.2' //二维码扫描
+//    // CameraX 使用YXing 报错加入这个包
+//    def camerax_version = '1.1.0-alpha04'
+//    implementation "androidx.camera:camera-camera2:$camerax_version"
+//    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+//    implementation "androidx.camera:camera-view:1.0.0-alpha20"
 
-    // 使用 AndroidX 时
-    implementation 'com.github.bingoogolapple.BGATransformersTip-Android:library:1.0.8'
+    // 使用 AndroidX时 弹窗
+     implementation 'com.github.bingoogolapple.BGATransformersTip-Android:library:1.0.8'
 
 }
 

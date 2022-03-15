@@ -53,7 +53,6 @@ public class Config {
             return URL_WHOLE;
         }
 
-
     }
 
 

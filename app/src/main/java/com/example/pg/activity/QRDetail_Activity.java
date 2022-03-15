@@ -15,7 +15,7 @@ import com.example.pg.fragment.QRDetail_ACF_Fragment;
 import com.example.pg.fragment.QRDetail_Production_Fragment;
 import com.example.pg.fragment.QRDetail_Receipt_Fragment;
 import com.example.pg.fragment.QRDetail_Transport_Fragment;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;

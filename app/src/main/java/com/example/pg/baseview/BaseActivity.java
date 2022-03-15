@@ -24,8 +24,7 @@ import com.example.pg.activity.MainActivity;
 import com.example.pg.common.titlebar.CustomTitleBar;
 import com.example.pg.common.utils.StringUtil;
 import com.example.pg.common.utils.T;
-import com.gyf.immersionbar.ImmersionBar;
-
+import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.HashMap;
 import java.util.Iterator;

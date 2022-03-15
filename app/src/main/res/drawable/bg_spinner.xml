@@ -10,12 +10,12 @@
         </shape>
     </item>
 
-    <item
-        android:id="@+id/layer2"
-        android:left="56dp"
-        android:right="6dp">
-        <bitmap
-            android:gravity="end"
-            android:src="@drawable/arrow_down"/>
-    </item>
+<!--    <item-->
+<!--        android:id="@+id/layer2"-->
+<!--        android:left="56dp"-->
+<!--        android:right="6dp">-->
+<!--        <bitmap-->
+<!--            android:gravity="end"-->
+<!--            android:src="@drawable/arrow_down"/>-->
+<!--    </item>-->
 </layer-list>

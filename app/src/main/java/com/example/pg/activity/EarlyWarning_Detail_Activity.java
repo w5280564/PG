@@ -12,7 +12,7 @@ import com.example.pg.R;
 import com.example.pg.adapter.EarlyWarning_item_Adapter;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.bean.EarlyWarning_Detail_Bean;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 
 
 /**

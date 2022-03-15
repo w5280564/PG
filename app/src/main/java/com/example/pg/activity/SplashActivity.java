@@ -6,7 +6,7 @@ import android.webkit.WebView;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.baseview.WebViewPools;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.Timer;
 import java.util.TimerTask;

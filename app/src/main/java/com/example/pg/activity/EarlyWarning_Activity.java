@@ -8,22 +8,16 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.pg.R;
-import com.example.pg.adapter.Customer_item_Adapter;
 import com.example.pg.adapter.WarningCode_item_Adapter;
 import com.example.pg.adapter.WarningName_item_Adapter;
 import com.example.pg.baseview.BaseActivity;
@@ -34,11 +28,9 @@ import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.ListUtils;
 import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import cn.bingoogolapple.transformerstip.TransformersTip;

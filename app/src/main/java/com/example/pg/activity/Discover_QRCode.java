@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;

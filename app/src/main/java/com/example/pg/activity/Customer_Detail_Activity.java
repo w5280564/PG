@@ -14,7 +14,7 @@ import com.example.pg.baseview.PagTab;
 import com.example.pg.bean.Statistical_List_Bean;
 import com.example.pg.common.utils.GsonUtil;
 import com.example.pg.common.utils.xUtils3Http;
-import com.gyf.immersionbar.ImmersionBar;
+import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.HashMap;
 import java.util.Map;
