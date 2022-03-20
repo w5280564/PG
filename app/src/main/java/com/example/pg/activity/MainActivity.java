@@ -124,10 +124,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        getLocation();
         startLocation();
 
-        LiveDataBus.get().with(MyConstant.Again_TakePicture,boolean.class).observe(this, new Observer<Boolean>() {
+        LiveDataBus.get().with(MyConstant.Again_TakePicture, boolean.class).observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if (aBoolean){
+                if (aBoolean) {
                     cameraXMethod();
                 }
             }
@@ -453,19 +453,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         String androidToPath = "";
         if (!ListUtils.isEmpty(selectList)) {
             LocalMedia localMedia = selectList.get(0);
-//            if (localMedia.isCut()) { // 用裁剪过的路径
-//                androidToPath = localMedia.getCutPath();
-//            }
-            if (TextUtils.isEmpty(androidToPath)) {
-                if (isQ()) {
-//                    androidToPath = selectList.get(0).getPath();
-                    androidToPath = localMedia.getCutPath();
-                } else {
-                    androidToPath = localMedia.getRealPath();
-                }
+            if (isQ()) {
+                androidToPath = localMedia.getCutPath();
+            } else {
+                androidToPath = localMedia.getRealPath();
             }
-
-//            GlideUtils.loadImage(mActivity, imageView, androidToPath);
             photoPaths.add(androidToPath);
             showCancelRoleDialog();
         }
@@ -579,7 +571,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (maken_bean != null) {
                     String data = maken_bean.getData();
                     if (TextUtils.equals(image_source, "1")) {
-                        MarkenCode_TakePicture_Activity.startActivity(context, data,blobImgUrl);
+                        MarkenCode_TakePicture_Activity.startActivity(context, data, blobImgUrl);
                     } else {
                         MarkenCode_Activity.startActivity(context, data);
                     }
