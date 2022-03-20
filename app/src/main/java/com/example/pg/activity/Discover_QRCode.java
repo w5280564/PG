@@ -84,7 +84,7 @@ public class Discover_QRCode extends BaseActivity implements QRCodeView.Delegate
     @Override
     public void onScanQRCodeSuccess(String result) {
         if (TextUtils.isEmpty(result)) {
-            Toast.makeText(mContext, "无法识别", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "无法识别", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!TextUtils.isEmpty(result)) {

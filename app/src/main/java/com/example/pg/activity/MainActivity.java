@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,23 +18,32 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.bumptech.glide.Glide;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.baseview.FileUploadTask;
 import com.example.pg.baseview.GlideEnGine;
+import com.example.pg.baseview.GlideUtils;
+import com.example.pg.baseview.ImageCropEngine;
 import com.example.pg.baseview.LocationUtils;
 import com.example.pg.baseview.NetWorkUtils;
 import com.example.pg.baseview.TwoButtonDialogBlue;
+import com.example.pg.baseview.livedatas.LiveDataBus;
+import com.example.pg.baseview.livedatas.MyConstant;
 import com.example.pg.bean.Maken_Bean;
 import com.example.pg.bean.User_Bean;
 import com.example.pg.common.utils.GsonUtil;
@@ -40,10 +52,22 @@ import com.example.pg.common.utils.ListUtils;
 import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
 import com.gyf.barlibrary.ImmersionBar;
-import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
+import com.luck.picture.lib.engine.CropEngine;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.interfaces.OnQueryDataSourceListener;
+import com.luck.picture.lib.interfaces.OnResultCallbackListener;
+import com.luck.picture.lib.utils.DateUtils;
+import com.permissionx.guolindev.PermissionX;
 import com.tencent.mmkv.MMKV;
+import com.wld.mycamerax.util.CameraConstant;
+import com.wld.mycamerax.util.CameraParam;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropImageEngine;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -99,6 +123,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         getIP();
 //        getLocation();
         startLocation();
+
+        LiveDataBus.get().with(MyConstant.Again_TakePicture,boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean){
+                    cameraXMethod();
+                }
+            }
+        });
     }
 
     @Override
@@ -234,24 +267,55 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     public void startMakenCamera() {
         //监听授权
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.CAMERA);
-        }
+//        List<String> permissionList = new ArrayList<>();
+//        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            permissionList.add(Manifest.permission.CAMERA);
+//        }
+//
+//        if (!permissionList.isEmpty()) {
+//            String[] permissions = permissionList.toArray(new String[0]);
+//            ActivityCompat.requestPermissions(mActivity, permissions, 1);
+//        } else {
+//            //打开相机录制视频
+//            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//            //判断相机是否正常。
+//            if (captureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
+//                startLocation();
+//                showPhotoPopWindow();
+//            }
+//
+//        }
 
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[0]);
-            ActivityCompat.requestPermissions(mActivity, permissions, 1);
-        } else {
-            //打开相机录制视频
-            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            //判断相机是否正常。
-            if (captureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
-                startLocation();
-                showPhotoPopWindow();
-            }
+        PermissionX.init(this)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .request((boolean allGranted, List<String> grantedList, List<String> deniedList) -> {
+                    if (allGranted) {
+                        startLocation();
+                        showPhotoPopWindow();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show();
+                    }
+                });
 
-        }
+    }
+
+    /**
+     * cameraX拍照获取照片
+     */
+    private void cameraXMethod() {
+        PermissionX.init(this)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .request((boolean allGranted, List<String> grantedList, List<String> deniedList) -> {
+                    if (allGranted) {
+                        CameraParam mCameraParam = new CameraParam.Builder()
+                                .setShowFocusTips(false)
+                                .setActivity(MainActivity.this)
+                                .build();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     /**
@@ -259,24 +323,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param context
      */
-    private void setCameraMetod(Context context) {
-        PictureSelector.create((Activity) context)
-                .openCamera(PictureConfig.TYPE_CAMERA)
-                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
-                .imageSpanCount(4)// 每行显示个数 int
-                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
-                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
-                .isPreviewImage(true)// 是否可预览图片 true or false
-                .isCamera(false)// 是否显示拍照按钮 true or false
-                .isEnableCrop(true)//开启裁剪
-                .cutOutQuality(100)//裁剪输出质量
-//                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例-尺寸 就是原图大小的选择框不会压缩
-//                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
-                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
-                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-                .isCompress(false)// 是否压缩 true or false
-                .forResult(PictureConfig.REQUEST_CAMERA);//结果回调onActivityResult code
+    private void setCameraMethod(Context context) {
+//        PictureSelector.create((Activity) context)
+//                .openCamera(PictureConfig.TYPE_CAMERA)
+//                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
+//                .imageSpanCount(4)// 每行显示个数 int
+//                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+//                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
+//                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
+//                .isPreviewImage(true)// 是否可预览图片 true or false
+//                .isCamera(false)// 是否显示拍照按钮 true or false
+//                .isEnableCrop(true)//开启裁剪
+//                .cutOutQuality(100)//裁剪输出质量
+////                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例-尺寸 就是原图大小的选择框不会压缩
+////                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+//                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
+//                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+//                .isCompress(false)// 是否压缩 true or false
+//                .forResult(PictureConfig.REQUEST_CAMERA);//结果回调onActivityResult code
     }
 
     /**
@@ -285,27 +349,59 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * @param context
      */
     private void setPhotoMetod(Context context) {
-        int choice = 1;
-        PictureSelector.create((Activity) context)
-                .openGallery(PictureConfig.TYPE_IMAGE)
-                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
-                .imageSpanCount(4)// 每行显示个数 int
-                .maxSelectNum(choice)//多选可以选择的图片数量
-                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
-                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
-                .isPreviewImage(true)// 是否可预览图片 true or false
-                .isCamera(true)// 是否显示拍照按钮 true or false
-                .isEnableCrop(true)//开启裁剪
-                .cutOutQuality(100)//裁剪输出质量
-//                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例 尺寸 就是原图大小的选择框不会压缩
-//                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
-                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
-//               .isCameraRotateImage(true)// 拍照是否纠正旋转图片
-//                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
-                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-                .isCompress(false)// 是否压缩 true or false
-                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+//        PictureSelector.create((Activity) context)
+//                .openGallery(PictureConfig.TYPE_IMAGE)
+//                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
+//                .imageSpanCount(4)// 每行显示个数 int
+//                .maxSelectNum(1)//多选可以选择的图片数量
+//                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+//                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
+//                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
+//                .isPreviewImage(true)// 是否可预览图片 true or false
+//                .isCamera(true)// 是否显示拍照按钮 true or false
+//                .isEnableCrop(true)//开启裁剪
+//                .cutOutQuality(100)//裁剪输出质量
+////                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例 尺寸 就是原图大小的选择框不会压缩
+////                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
+//                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
+////               .isCameraRotateImage(true)// 拍照是否纠正旋转图片
+////                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
+//                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+//                .isCompress(false)// 是否压缩 true or false
+//                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+
+
+        PictureSelector.create(this)
+                .openGallery(SelectMimeType.ofImage())
+                .setImageEngine(GlideEnGine.createGlideEngine())
+                .setSelectionMode(1)//单选或多选
+                .isDirectReturnSingle(true)
+                .setCropEngine(getCropEngine())//自定义裁剪
+                .setImageSpanCount(4) //相册列表每行显示个数
+                .isDisplayCamera(false) //是否显示相机入口
+//                .isPreviewImage(false)//图片预览 单选模式下不需要
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(ArrayList<LocalMedia> result) {
+                        image_source = "2";
+                        addPhoto(result);
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+
+    }
+
+    /**
+     * 裁剪引擎
+     *
+     * @return
+     */
+    private ImageCropEngine getCropEngine() {
+        return new ImageCropEngine();
     }
 
 
@@ -316,17 +412,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case PictureConfig.REQUEST_CAMERA:
+                case CameraConstant.REQUEST_CODE:
+                    //获取图片路径
+                    String picturePath = data.getStringExtra(CameraConstant.PICTURE_PATH_KEY);
+                    //显示出来
+//                    img_picture.setVisibility(View.VISIBLE);
+//                    img_picture.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                     image_source = "1";
-                    List<LocalMedia> selectCamera = PictureSelector.obtainMultipleResult(data);
-                    addPhoto(selectCamera);
-//                    GlideUtils.loadImage(mActivity, maken_Img, selectList.get(0).getAndroidQToPath());
+                    addPhoto(picturePath);
                     break;
-                case PictureConfig.CHOOSE_REQUEST:
-                    image_source = "2";
-                    List<LocalMedia> selectChoose = PictureSelector.obtainMultipleResult(data);
-                    addPhoto(selectChoose);
-                    break;
+//                case PictureConfig.REQUEST_CAMERA:
+//                    image_source = "1";
+//                    List<LocalMedia> selectCamera = PictureSelector.obtainMultipleResult(data);
+//                    addPhoto(selectCamera);
+////                    GlideUtils.loadImage(mActivity, maken_Img, selectList.get(0).getAndroidQToPath());
+//                    break;
+//                case PictureConfig.CHOOSE_REQUEST:
+//                    image_source = "2";
+//                    List<LocalMedia> selectChoose = PictureSelector.obtainMultipleResult(data);
+//                    addPhoto(selectChoose);
+//                    break;
 //                case ScanCodeConfig.QUESTCODE:
 //                    //接收扫码结果
 //                    Bundle extras = data.getExtras();
@@ -348,14 +453,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         String androidToPath = "";
         if (!ListUtils.isEmpty(selectList)) {
             LocalMedia localMedia = selectList.get(0);
-            if (localMedia.isCut()) { // 用裁剪过的路径
-                androidToPath = localMedia.getCutPath();
-            }
+//            if (localMedia.isCut()) { // 用裁剪过的路径
+//                androidToPath = localMedia.getCutPath();
+//            }
             if (TextUtils.isEmpty(androidToPath)) {
                 if (isQ()) {
-                    androidToPath = selectList.get(0).getAndroidQToPath();
+//                    androidToPath = selectList.get(0).getPath();
+                    androidToPath = localMedia.getCutPath();
                 } else {
-                    androidToPath = selectList.get(0).getRealPath();
+                    androidToPath = localMedia.getRealPath();
                 }
             }
 
@@ -364,6 +470,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             showCancelRoleDialog();
         }
     }
+
+    private void addPhoto(String pic) {
+        photoPaths = new ArrayList<>();
+        photoPaths.add(pic);
+        showCancelRoleDialog();
+
+    }
+
 
     private boolean isQ() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -464,7 +578,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Maken_Bean maken_bean = GsonUtil.getInstance().json2Bean(result, Maken_Bean.class);
                 if (maken_bean != null) {
                     String data = maken_bean.getData();
-                    MarkenCode_Activity.startActivity(context, data);
+                    if (TextUtils.equals(image_source, "1")) {
+                        MarkenCode_TakePicture_Activity.startActivity(context, data,blobImgUrl);
+                    } else {
+                        MarkenCode_Activity.startActivity(context, data);
+                    }
                 }
             }
 
@@ -569,7 +687,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 TextView photo_Tv = contentView.findViewById(R.id.photo_Tv);
                 TextView cancel_Tv = contentView.findViewById(R.id.cancel_Tv);
                 camera_Tv.setOnClickListener(v -> {
-                    setCameraMetod(mActivity);
+//                    setCameraMethod(mActivity);
+                    cameraXMethod();
                     dismissTip();
                 });
                 photo_Tv.setOnClickListener(v -> {

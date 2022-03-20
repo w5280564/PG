@@ -24,7 +24,7 @@ import org.xutils.x;
 import java.util.Map;
 
 public class xUtils3Http {
-    private static LoadingDialog mDialog;
+    public static LoadingDialog mDialog;
     private static String dialogMessage = "";
     //    public static final String BASE_URL = "https://qa-dtt-mobile.pg.com.cn";
     public static final String SSO_BASE_URL = "https://dtt-mobile.pg.com.cn";

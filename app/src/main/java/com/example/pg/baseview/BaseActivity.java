@@ -38,7 +38,7 @@ import java.util.Map;
 
 public abstract class BaseActivity extends FragmentActivity implements CustomTitleBar.TitleBarClickListener {
     protected MyApplication mApplication;
-    protected Context mContext;
+//    protected Context mContext;
     protected BaseActivity mActivity;
     protected CustomTitleBar titleBar;
     protected String title;

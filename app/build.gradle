@@ -85,7 +85,12 @@ dependencies {
     api 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 //    implementation 'com.contrarywind:Android-PickerView:4.1.9'//弹窗选择器
-    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc02'//图片选择器
+//    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc02'//图片选择器
+    implementation 'io.github.lucksiege:pictureselector:v3.0.6'//图片选择器
+    // 图片压缩 (按需引入)
+//    implementation 'io.github.lucksiege:compress:v3.0.6'
+    // 图片裁剪 (按需引入)
+    implementation 'io.github.lucksiege:ucrop:v3.0.6'
     api 'com.microsoft.azure.android:azure-storage-android:2.0.0@aar' //blob上传图片
     implementation 'com.amap.api:location:5.3.0'
 //    implementation 'com.github.itlwy:PaginationExample:0.0.20' //仿网页分页
@@ -103,5 +108,7 @@ dependencies {
     // 使用 AndroidX时 弹窗
      implementation 'com.github.bingoogolapple.BGATransformersTip-Android:library:1.0.8'
 
+    implementation 'com.permissionx.guolindev:permissionx:1.4.0'
+    implementation project(path: ':myCameraX')
 }
 
