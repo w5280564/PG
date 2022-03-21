@@ -27,16 +27,19 @@ import com.gyf.barlibrary.ImmersionBar;
 public class MarkenCode_TakePicture_Activity extends BaseActivity {
     private String makenStr = "";
     private String imgUrl;
+    private String image_source;
 
     /**
      * @param context
-     * @param makenStr 马肯码分析结果
-     * @param imgUrl   拍照照片
+     * @param makenStr     马肯码分析结果
+     * @param imgUrl       拍照照片
+     * @param image_source 拍照 1 或者相册 2
      */
-    public static void startActivity(Context context, String makenStr, String imgUrl) {
+    public static void startActivity(Context context, String makenStr, String imgUrl, String image_source) {
         Intent intent = new Intent(context, MarkenCode_TakePicture_Activity.class);
         intent.putExtra("makenStr", makenStr);
         intent.putExtra("imgUrl", imgUrl);
+        intent.putExtra("image_source", image_source);
         context.startActivity(intent);
     }
 
@@ -68,6 +71,7 @@ public class MarkenCode_TakePicture_Activity extends BaseActivity {
         super.initLocalData();
         makenStr = getIntent().getStringExtra("makenStr");
         imgUrl = getIntent().getStringExtra("imgUrl");
+        image_source = getIntent().getStringExtra("image_source");
     }
 
     @Override
@@ -80,7 +84,16 @@ public class MarkenCode_TakePicture_Activity extends BaseActivity {
         if (!TextUtils.isEmpty(imgUrl)) {
             GlideUtils.loadImage(mActivity, maken_Img, imgUrl);
         }
-        again_Tv.setText("再拍一个");
+        if (TextUtils.equals(image_source, "1")) {
+            if (TextUtils.equals(makenStr, "0") || TextUtils.equals(makenStr, "1")) {
+                again_Tv.setText("再拍一个");
+            } else {
+                again_Tv.setText("重新拍照");
+            }
+        } else {
+            again_Tv.setText("重新上传");
+        }
+
         if (TextUtils.equals(makenStr, "0")) {
             String txt = "初步判断为假货";
             int color = mActivity.getColor(R.color.text_color_e15858);
@@ -92,12 +105,16 @@ public class MarkenCode_TakePicture_Activity extends BaseActivity {
 
         } else if (TextUtils.equals(makenStr, "2") || TextUtils.equals(makenStr, "3")) {
             maken_Tv.setText("识别失败，请重新拍照");
-            again_Tv.setText("重新拍照");
+
         }
 
-        again_Tv.setOnClickListener(v -> {
 
-            LiveDataBus.get().with(MyConstant.Again_TakePicture).setValue(true);
+        again_Tv.setOnClickListener(v -> {
+            if (TextUtils.equals(image_source, "1")) {
+                LiveDataBus.get().with(MyConstant.Again_TakePicture).setValue(true);
+            } else {
+                LiveDataBus.get().with(MyConstant.Choose_Photo).setValue(true);
+            }
             finish();
         });
 
@@ -108,7 +125,7 @@ public class MarkenCode_TakePicture_Activity extends BaseActivity {
 
 
     /**
-     * @param name        要显示的数据
+     * @param name     要显示的数据
      * @param viewName
      */
     @RequiresApi(api = Build.VERSION_CODES.M)

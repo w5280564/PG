@@ -132,6 +132,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
             }
         });
+        LiveDataBus.get().with(MyConstant.Choose_Photo, boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    setPhotoMetod(mActivity);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -446,7 +455,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 获取拍照与相册返回照片
+     * 获取相册返回照片
      */
     private void addPhoto(List<LocalMedia> selectList) {
         photoPaths = new ArrayList<>();
@@ -463,6 +472,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 获取拍照返回照片路径
+     * @param pic
+     */
     private void addPhoto(String pic) {
         photoPaths = new ArrayList<>();
         photoPaths.add(pic);
@@ -570,11 +583,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Maken_Bean maken_bean = GsonUtil.getInstance().json2Bean(result, Maken_Bean.class);
                 if (maken_bean != null) {
                     String data = maken_bean.getData();
-                    if (TextUtils.equals(image_source, "1")) {
-                        MarkenCode_TakePicture_Activity.startActivity(context, data, blobImgUrl);
-                    } else {
-                        MarkenCode_Activity.startActivity(context, data);
-                    }
+                    MarkenCode_TakePicture_Activity.startActivity(context, data, blobImgUrl, image_source);
+//                    if (TextUtils.equals(image_source, "1")) {
+//                    } else {
+//                        MarkenCode_Activity.startActivity(context, data);
+//                    }
                 }
             }
 
