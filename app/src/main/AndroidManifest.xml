@@ -70,9 +70,6 @@
         tools:replace="android:theme,allowBackup">
 
         <activity
-            android:name=".activity.MarkenCode_TakePicture_Activity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.MarkenCode_Activity"
             android:screenOrientation="portrait" />
 

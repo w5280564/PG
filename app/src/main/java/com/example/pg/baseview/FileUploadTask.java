@@ -21,16 +21,17 @@ public class FileUploadTask extends AsyncTask<Void, Void, String> {
 //    private static final String CONTAINER_NAME = "my-file";
     private static final String CONTAINER_NAME = "markenverify";
     //连接字符
-    private static final String storageConnectionString =
-            "DefaultEndpointsProtocol=https;" +
-                    "AccountName=b2bqacne2dttsa01;" +
-                    "AccountKey=Gld3MeGTGfIpbHpWwRvMLxDI7BD+otywaUxVOFwheJvVg0ZXYAYssQ4oI7cYgTITUjmGkQ2UmvUFQc7e25SF6Q==;" +
-                    "EndpointSuffix=core.chinacloudapi.cn";
+//    private static final String storageConnectionString =
+//            "DefaultEndpointsProtocol=https;" +
+//                    "AccountName=b2bqacne2dttsa01;" +
+//                    "AccountKey=Gld3MeGTGfIpbHpWwRvMLxDI7BD+otywaUxVOFwheJvVg0ZXYAYssQ4oI7cYgTITUjmGkQ2UmvUFQc7e25SF6Q==;" +
+//                    "EndpointSuffix=core.chinacloudapi.cn";
 
-    //    private static final String storageConnectionString =
-//            "DefaultEndpointsProtocol=http;" +
-//                    "AccountName=my01test01;" +
-//                    "AccountKey=tTP+zfmrUGb6FhiPBW/fRNCrjnfwX1QkJIvLpMp0BpWvFhgGjhlq6Syn5DFGgMjTsvPwhC8GmB6db/jklDpzPw==";
+    private static final String storageConnectionString =
+             "DefaultEndpointsProtocol=https;" +
+                    "AccountName=b2bprdcne2dttsa01;" +
+                    "AccountKey=oM5M3clZKykuUSYfI3XXFNfyuN94OoML21wHyOJ224lfkSyEIo6TBXdGjcBYWyB93tFgjXAtpQz28hPXsB35Rw==;" +
+                    "EndpointSuffix=core.chinacloudapi.cn";
     private ProgressDialog mDialog;
     private File mUploadFile;
     private Context mContext;

@@ -33,7 +33,7 @@ public class xUtils3Http {
     public static String UserData = "user";//用户信息
     public static String Acf_Bean = "acf_bean";//
 
-    public static final String QA_Marken_URL = "https://qa-dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯QA地址
+//    public static final String QA_Marken_URL = "https://qa-dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯QA地址
     public static final String PRD_Marken_URL = "https://dtt-mobile.pg.com.cn/bff/api/markenVerify";//马肯PRO地址
     public static final String BASE_URL = "https://api-b2b-prd.cn-pgcloud.com/dtt-application/dtt/zzsy";//地址
     public static final String SSO_PingID = "https://dtt-mobile.pg.com.cn/app/#/"; //pingID

@@ -4,40 +4,27 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.bumptech.glide.Glide;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
 import com.example.pg.baseview.FileUploadTask;
 import com.example.pg.baseview.GlideEnGine;
-import com.example.pg.baseview.GlideUtils;
 import com.example.pg.baseview.ImageCropEngine;
 import com.example.pg.baseview.LocationUtils;
 import com.example.pg.baseview.NetWorkUtils;
@@ -53,25 +40,16 @@ import com.example.pg.common.utils.T;
 import com.example.pg.common.utils.xUtils3Http;
 import com.gyf.barlibrary.ImmersionBar;
 import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.config.SelectModeConfig;
-import com.luck.picture.lib.engine.CropEngine;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnQueryDataSourceListener;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.luck.picture.lib.utils.DateUtils;
 import com.permissionx.guolindev.PermissionX;
 import com.tencent.mmkv.MMKV;
 import com.wld.mycamerax.util.CameraConstant;
 import com.wld.mycamerax.util.CameraParam;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropImageEngine;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -237,64 +215,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     public void startCamera(Activity context) {
-        //监听授权
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.CAMERA);
-        }
-
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(context, permissions, 1);
-        } else {
-            //打开相机录制视频
-            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            //判断相机是否正常。
-//            if (captureIntent.resolveActivity(context.getPackageManager()) != null) {
-            Discover_QRCode.actionStart(context);
-//            }
-//            startQRScan();
-        }
+        PermissionX.init(this)
+                .permissions( Manifest.permission.CAMERA)
+                .request((boolean allGranted, List<String> grantedList, List<String> deniedList) -> {
+                    if (allGranted) {
+                        Discover_QRCode.actionStart(context);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
-    /**
-     * YXing 二维码扫描
-     */
-    private void startQRScan() {
-//        ScanCodeConfig.create(mActivity)
-//                //设置扫码页样式 ScanStyle.NONE：无  ScanStyle.QQ ：仿QQ样式   ScanStyle.WECHAT ：仿微信样式    ScanStyle.CUSTOMIZE ： 自定义样式
-//                .setStyle(ScanStyle.QQ)
-//                //扫码成功是否播放音效  true ： 播放   false ： 不播放
-//                .setPlayAudio(false)
-//                .buidler()
-//                //跳转扫码页   扫码页可自定义样式
-//                .start(ScanCodeActivity.class);
-    }
+
 
     /**
      * 打开马肯码
      */
     public void startMakenCamera() {
-        //监听授权
-//        List<String> permissionList = new ArrayList<>();
-//        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//            permissionList.add(Manifest.permission.CAMERA);
-//        }
-//
-//        if (!permissionList.isEmpty()) {
-//            String[] permissions = permissionList.toArray(new String[0]);
-//            ActivityCompat.requestPermissions(mActivity, permissions, 1);
-//        } else {
-//            //打开相机录制视频
-//            Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//            //判断相机是否正常。
-//            if (captureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
-//                startLocation();
-//                showPhotoPopWindow();
-//            }
-//
-//        }
-
         PermissionX.init(this)
                 .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .request((boolean allGranted, List<String> grantedList, List<String> deniedList) -> {
@@ -305,7 +242,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         Toast.makeText(getApplicationContext(), "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show();
                     }
                 });
-
     }
 
     /**
@@ -327,30 +263,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
     }
 
-    /**
-     * 拍照
-     *
-     * @param context
-     */
-    private void setCameraMethod(Context context) {
-//        PictureSelector.create((Activity) context)
-//                .openCamera(PictureConfig.TYPE_CAMERA)
-//                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
-//                .imageSpanCount(4)// 每行显示个数 int
-//                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-//                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
-//                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
-//                .isPreviewImage(true)// 是否可预览图片 true or false
-//                .isCamera(false)// 是否显示拍照按钮 true or false
-//                .isEnableCrop(true)//开启裁剪
-//                .cutOutQuality(100)//裁剪输出质量
-////                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例-尺寸 就是原图大小的选择框不会压缩
-////                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
-//                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
-//                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-//                .isCompress(false)// 是否压缩 true or false
-//                .forResult(PictureConfig.REQUEST_CAMERA);//结果回调onActivityResult code
-    }
 
     /**
      * 相册选择图片
@@ -358,28 +270,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * @param context
      */
     private void setPhotoMetod(Context context) {
-//        PictureSelector.create((Activity) context)
-//                .openGallery(PictureConfig.TYPE_IMAGE)
-//                .imageEngine(GlideEnGine.createGlideEngine()) //图片加载空白 加入Glide加载图片
-//                .imageSpanCount(4)// 每行显示个数 int
-//                .maxSelectNum(1)//多选可以选择的图片数量
-//                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-//                .isSingleDirectReturn(true)//PictureConfig.SINGLE模式下是否直接返回
-//                .isAndroidQTransform(true)//Android Q版本下是否需要拷贝文件至应用沙盒内
-//                .isPreviewImage(true)// 是否可预览图片 true or false
-//                .isCamera(true)// 是否显示拍照按钮 true or false
-//                .isEnableCrop(true)//开启裁剪
-//                .cutOutQuality(100)//裁剪输出质量
-////                .cropImageWideHigh(200, 200)//裁剪尺寸 不设置比例 尺寸 就是原图大小的选择框不会压缩
-////                .withAspectRatio(1, 1)//裁剪比例1：1是正方形
-//                .freeStyleCropEnabled(true)//裁剪框是否可拖拽
-////               .isCameraRotateImage(true)// 拍照是否纠正旋转图片
-////                .imageFormat(PictureMimeType.PNG_Q)//拍照图片格式后缀,默认jpeg, PictureMimeType.PNG，Android Q使用PictureMimeType.PNG_Q
-//                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
-//                .isCompress(false)// 是否压缩 true or false
-//                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
-
-
         PictureSelector.create(this)
                 .openGallery(SelectMimeType.ofImage())
                 .setImageEngine(GlideEnGine.createGlideEngine())
@@ -425,31 +315,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     //获取图片路径
                     String picturePath = data.getStringExtra(CameraConstant.PICTURE_PATH_KEY);
                     //显示出来
-//                    img_picture.setVisibility(View.VISIBLE);
-//                    img_picture.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                     image_source = "1";
                     addPhoto(picturePath);
                     break;
-//                case PictureConfig.REQUEST_CAMERA:
-//                    image_source = "1";
-//                    List<LocalMedia> selectCamera = PictureSelector.obtainMultipleResult(data);
-//                    addPhoto(selectCamera);
-////                    GlideUtils.loadImage(mActivity, maken_Img, selectList.get(0).getAndroidQToPath());
-//                    break;
-//                case PictureConfig.CHOOSE_REQUEST:
-//                    image_source = "2";
-//                    List<LocalMedia> selectChoose = PictureSelector.obtainMultipleResult(data);
-//                    addPhoto(selectChoose);
-//                    break;
-//                case ScanCodeConfig.QUESTCODE:
-//                    //接收扫码结果
-//                    Bundle extras = data.getExtras();
-//                    if (extras != null) {
-//                        String code = extras.getString(ScanCodeConfig.CODE_KEY);
-////                        tvCode.setText(String.format("%s%s", "结果： " , code));
-//                        QRDetail_Activity.startActivity(mActivity, code);
-//                    }
-//                    break;
+
             }
         }
     }
@@ -529,7 +398,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void success(String result) {
 //                        getInfo(result);
-                        postMaken(mActivity, xUtils3Http.QA_Marken_URL, result);
+                        postMaken(mActivity, xUtils3Http.PRD_Marken_URL, result);
                     }
 
                     @Override
@@ -583,7 +452,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Maken_Bean maken_bean = GsonUtil.getInstance().json2Bean(result, Maken_Bean.class);
                 if (maken_bean != null) {
                     String data = maken_bean.getData();
-                    MarkenCode_TakePicture_Activity.startActivity(context, data, blobImgUrl, image_source);
+                    MarkenCode_Activity.startActivity(context, data, blobImgUrl, image_source);
 //                    if (TextUtils.equals(image_source, "1")) {
 //                    } else {
 //                        MarkenCode_Activity.startActivity(context, data);
@@ -619,17 +488,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     public void startLocation() {
-        //监听授权
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {//摄像与录制
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(this, permissions, 1);
-        } else {
-            Location();
-        }
+        PermissionX.init(this)
+                .permissions( Manifest.permission.ACCESS_FINE_LOCATION)
+                .request((boolean allGranted, List<String> grantedList, List<String> deniedList) -> {
+                    if (allGranted) {
+                        Location();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     //声明AMapLocationClientOption对象
@@ -692,7 +559,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 TextView photo_Tv = contentView.findViewById(R.id.photo_Tv);
                 TextView cancel_Tv = contentView.findViewById(R.id.cancel_Tv);
                 camera_Tv.setOnClickListener(v -> {
-//                    setCameraMethod(mActivity);
                     cameraXMethod();
                     dismissTip();
                 });
