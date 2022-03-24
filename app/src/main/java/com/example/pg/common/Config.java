@@ -21,7 +21,7 @@ public class Config {
         public static final boolean IS_LOG = false;
 
 
-        // 图片保存地址
+        // 图片保存地址 
         public static final String IMG_CACHE = "huan" + File.separator + "Download";
     }
 

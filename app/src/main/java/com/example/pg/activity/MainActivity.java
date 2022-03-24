@@ -479,8 +479,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void addPhoto(String pic) {
         photoPaths = new ArrayList<>();
         photoPaths.add(pic);
-        showCancelRoleDialog();
-
+//        showCancelRoleDialog();去掉隐私提醒框
+        uploadPhoto();
     }
 
 
