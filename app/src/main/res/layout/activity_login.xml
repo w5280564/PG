@@ -2,10 +2,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/web_Con"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/web_Con">
+    android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/network_Con"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/reload_Tv"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:background="@drawable/web_reload"
+            android:gravity="center"
+            android:text="点击重试"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/noWifi_Tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="当前网络不佳"
+            android:textFontWeight="500"
+            app:layout_constraintBottom_toTopOf="@id/reload_Tv"
+            app:layout_constraintEnd_toEndOf="@id/reload_Tv"
+            app:layout_constraintStart_toStartOf="@id/reload_Tv" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/nowifi_icon"
+            app:layout_constraintBottom_toTopOf="@id/noWifi_Tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

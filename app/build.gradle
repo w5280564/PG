@@ -97,5 +97,7 @@ dependencies {
 
     implementation 'com.permissionx.guolindev:permissionx:1.4.0'
     implementation project(path: ':myCameraX')
+
+    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.4.6'//腾讯定位
 }
 

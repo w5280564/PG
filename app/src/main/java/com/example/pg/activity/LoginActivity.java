@@ -2,12 +2,20 @@ package com.example.pg.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.http.SslError;
 import android.os.Build;
+import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -28,6 +36,8 @@ public class LoginActivity extends BaseActivity {
     private WebView x5Webview;
     private String authCode = "";
     private ConstraintLayout web_Con;
+    private ConstraintLayout network_Con;
+    private TextView reload_Tv;
 
 
     /**
@@ -53,6 +63,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        network_Con = findViewById(R.id.network_Con);
+        reload_Tv = findViewById(R.id.reload_Tv);
         web_Con = findViewById(R.id.web_Con);
         x5Webview = WebViewPools.getInstance().acquireWebView(this);
         web_Con.addView(x5Webview, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -61,6 +73,12 @@ public class LoginActivity extends BaseActivity {
         String url = xUtils3Http.SSO_PingID;
         initWebView(url);
         getCode();
+    }
+
+    @Override
+    protected void initEvent() {
+        super.initEvent();
+        reload_Tv.setOnClickListener(new reload_TvClick());
     }
 
     @Override
@@ -93,6 +111,18 @@ public class LoginActivity extends BaseActivity {
         x5Webview.getSettings().setDomStorageEnabled(true);
     }
 
+    private class reload_TvClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            isWebViewloadError = false;
+            String url = xUtils3Http.SSO_PingID;
+            initWebView(url);
+        }
+    }
+
+
+    private boolean isWebViewloadError = false;//记录webView是否已经加载出错
+
     /**
      * 拦截地址后的authCode
      */
@@ -110,7 +140,77 @@ public class LoginActivity extends BaseActivity {
                 }
                 return toUrlOrAct(url, code, view);
             }
+
+            //  加载失败
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                isWebViewloadError = true;
+                view.loadUrl("about:blank");// 避免出现默认的错误界面
+                webLoad();
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                super.onReceivedHttpError(view, request, errorResponse);
+                isWebViewloadError = true;
+                view.loadUrl("about:blank");// 避免出现默认的错误界面
+                webLoad();
+            }
+
+            //加载证书错误网页失败
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//                super.onReceivedSslError(view, handler, error);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    x5Webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+                }
+//                handler.proceed();
+//                isWebViewloadError = true;
+//                network_Con.setVisibility(View.VISIBLE);
+            }
         });
+
+        /**
+         * 加载进度条
+         */
+        x5Webview.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress == 100) {
+                    //加载100%
+                    if (!isWebViewloadError && View.VISIBLE == network_Con.getVisibility()) {
+                        network_Con.setVisibility(View.GONE);//重新加载按钮
+                        x5Webview.setVisibility(View.VISIBLE);
+                    }
+                }
+
+            }
+        });
+    }
+
+    int index = 0;
+    /**
+     * 重新加载webview 加载三次显示网络不好
+     */
+    private void webLoad() {
+        L.d("index", index + "");
+        if (index < 3) {
+            x5Webview.reload();
+        } else {
+//            index = 0;
+            webShow();
+        }
+        index++;
+    }
+
+    /**
+     * 重新加载按钮
+     */
+    private void webShow() {
+        x5Webview.setVisibility(View.GONE);
+        network_Con.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -170,6 +270,5 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
-
 
 }

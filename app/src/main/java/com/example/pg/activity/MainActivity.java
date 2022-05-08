@@ -2,13 +2,16 @@ package com.example.pg.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.pg.R;
 import com.example.pg.baseview.BaseActivity;
+import com.example.pg.baseview.DemoUtils;
 import com.example.pg.baseview.FileUploadTask;
 import com.example.pg.baseview.GlideEnGine;
 import com.example.pg.baseview.ImageCropEngine;
@@ -44,6 +48,10 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 import com.permissionx.guolindev.PermissionX;
+import com.tencent.map.geolocation.TencentLocation;
+import com.tencent.map.geolocation.TencentLocationListener;
+import com.tencent.map.geolocation.TencentLocationManager;
+import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tencent.mmkv.MMKV;
 import com.wld.mycamerax.util.CameraConstant;
 import com.wld.mycamerax.util.CameraParam;
@@ -56,6 +64,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import cn.bingoogolapple.transformerstip.TransformersTip;
 import cn.bingoogolapple.transformerstip.gravity.TipGravity;
@@ -100,6 +109,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         maken_Con = findMyViewById(R.id.maken_Con);
         getIP();
 //        getLocation();
+
+        // 设置用户隐私
+        TencentLocationManager.setUserAgreePrivacy(true);
         startLocation();
 
         LiveDataBus.get().with(MyConstant.Again_TakePicture, boolean.class).observe(this, new Observer<Boolean>() {
@@ -123,8 +135,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void getServerData() {
-        String s = xUtils3Http.SSO_BASE_URL + xUtils3Http.User_By;
-        getV3Login(this, s);
+//        String s = xUtils3Http.SSO_BASE_URL + xUtils3Http.User_By;
+//        getV3Login(this, s);
     }
 
     @Override
@@ -484,6 +496,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onDestroy();
 //        LocationUtils.getInstance(this).removeLocationUpdatesListener();
         mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
+        stopLocation();
     }
 
 
@@ -492,12 +505,93 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .permissions( Manifest.permission.ACCESS_FINE_LOCATION)
                 .request((boolean allGranted, List<String> grantedList, List<String> deniedList) -> {
                     if (allGranted) {
-                        Location();
+//                        Location();
+                        startTenCentLocation();
                     } else {
                         Toast.makeText(getApplicationContext(), "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show();
                     }
                 });
     }
+
+    private TencentLocationManager mLocationManager;
+    // "开始"定位
+    public void startTenCentLocation() {
+        mLocationManager = TencentLocationManager.getInstance(this);
+//		mLocationManager.setDeviceID(this, "7E35C989E01E1E48A8D9059C355F7C4A");
+        // 设置坐标系为 gcj-02, 缺省坐标为 gcj-02, 所以通常不必进行如下调用
+        mLocationManager.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_GCJ02);
+        // 创建定位请求
+        TencentLocationRequest request = TencentLocationRequest.create()
+                .setInterval(5*1000) // 设置定位周期
+                .setAllowGPS(true)  //当为false时，设置不启动GPS。默认启动
+//                .setQQ("10001")
+                .setRequestLevel(TencentLocationRequest.REQUEST_LEVEL_ADMIN_AREA); // 设置定位level
+
+        // 开始定位
+        mLocationManager.requestLocationUpdates(request, new LocationChanged(),getMainLooper());
+
+        updateLocationStatus("开始定位: " + request + ", 坐标系=" + DemoUtils.toString(mLocationManager.getCoordinateType()));
+    }
+
+    private class LocationChanged implements TencentLocationListener {
+        @Override
+        public void onLocationChanged(TencentLocation tencentLocation, int error, String reason) {
+            String msg = null;
+            if (error == TencentLocation.ERROR_OK) {
+                // 定位成功
+//                msg = toString(tencentLocation, TencentLocationRequest.REQUEST_LEVEL_ADMIN_AREA);
+                StringBuilder sb = new StringBuilder();
+                sb.append("latitude=").append(tencentLocation.getLatitude()).append(",");
+                sb.append("longitude=").append(tencentLocation.getLongitude()).append(",");
+                sb.append("altitude=").append(tencentLocation.getAltitude()).append(",");
+                sb.append("accuracy=").append(tencentLocation.getAccuracy()).append(",");
+                sb.append("name=").append(tencentLocation.getName()).append(",");
+                sb.append("address=").append(tencentLocation.getAddress()).append(",");
+
+                sb.append("nation=").append(tencentLocation.getNation()).append(",");
+                sb.append("province=").append(tencentLocation.getProvince()).append(",");
+                sb.append("city=").append(tencentLocation.getCity()).append(",");
+                sb.append("district=").append(tencentLocation.getDistrict()).append(",");
+                sb.append("town=").append(tencentLocation.getTown()).append(",");
+                sb.append("village=").append(tencentLocation.getVillage()).append(",");
+                sb.append("street=").append(tencentLocation.getStreet()).append(",");
+                sb.append("streetNo=").append(tencentLocation.getStreetNo()).append(",");
+                sb.append("citycode=").append(tencentLocation.getCityCode()).append(",");
+
+
+                province = tencentLocation.getProvince();
+                city = tencentLocation.getCity();
+                address = tencentLocation.getAddress();
+
+                L.d("location",sb.toString());
+                msg = sb.toString();
+            } else {
+                // 定位失败
+                msg = "定位失败: " + reason;
+                L.d("location",msg);
+            }
+            updateLocationStatus(msg);
+        }
+
+        @Override
+        public void onStatusUpdate(String s, int i, String s1) {
+
+        }
+    }
+
+    private void updateLocationStatus(String message) {
+        L.d("location",message);
+//        mLocationStatus.append(message);
+//        mLocationStatus.append("\n---\n");
+    }
+
+    // 响应点击"停止"
+    public void stopLocation() {
+        mLocationManager.removeUpdates(new LocationChanged());
+        updateLocationStatus("停止定位");
+    }
+
+
 
     //声明AMapLocationClientOption对象
     public AMapLocationClientOption mLocationOption = null;
